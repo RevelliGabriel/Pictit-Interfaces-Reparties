@@ -1,12 +1,25 @@
 var express = require('express');
 var router = express.Router();
+const fs = require('fs');
 
 router.param('id', function (req, res, next, id) {
   // sample user, would actually fetch from DB, etc...
+  let data = fs.readFileSync('db/users.json');
+  let users = JSON.parse(data).users;
+
+  console.log(users)
+
+  let user = users.filter(user => user.id == id)[0];
+
+  console.log(user)
+
+  if(!user) {new Error('no user found')}
+
   req.user = {
-    id: id,
-    name: 'PGARB'
+    id: user.id,
+    name: user.name
   }
+
   next()
 })
 

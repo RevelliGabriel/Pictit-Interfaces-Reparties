@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() {
+  try {
+    IO.Socket socket = IO.io('http://127.0.0.1:3000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+    socket.on('connect', (_) {
+    print('connect');
+});
+    socket.onDisconnect((_) => print('disconnect'));
+    socket.on('fromServer', (_) => print(_));
+  } catch (e) {
+    print(e.toString());
+  }
   runApp(MyApp());
 }
 

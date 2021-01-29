@@ -2,19 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() {
-  try {
-    IO.Socket socket = IO.io('http://127.0.0.1:3000', <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
-    socket.on('connect', (_) {
-    print('connect');
-});
-    socket.onDisconnect((_) => print('disconnect'));
-    socket.on('fromServer', (_) => print(_));
-  } catch (e) {
-    print(e.toString());
-  }
   runApp(MyApp());
 }
 
@@ -25,19 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -48,15 +23,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -64,27 +30,79 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  IO.Socket socket;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  @override
+  void initState() {
+    super.initState();
+    connectToServer();
+  }
+
+  void connectToServer() {
+    try {
+      // Configure socket transports must be sepecified
+      socket = IO.io('http://127.0.0.1:3000', <String, dynamic>{
+        'transports': ['websocket'],
+        'autoConnect': false,
+      });
+
+      // Connect to websocket
+      socket.connect();
+
+      // Handle socket events
+      socket.on('connect', (_) => print('connect: ${socket.id}'));
+      socket.on('location', handleLocationListen);
+      socket.on('typing', handleTyping);
+      socket.on('message', handleMessage);
+      socket.on('disconnect', (_) => print('disconnect'));
+      socket.on('fromServer', (_) => print(_));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // Send Location to Server
+  sendLocation(Map<String, dynamic> data) {
+    socket.emit("location", data);
+  }
+
+  // Listen to Location updates of connected usersfrom server
+  handleLocationListen(Map<String, dynamic> data) async {
+    print(data);
+  }
+
+  // Send update of user's typing status
+  sendTyping(bool typing) {
+    socket.emit("typing", {
+      "id": socket.id,
+      "typing": typing,
     });
+  }
+
+  // Listen to update of typing status from connected users
+  void handleTyping(Map<String, dynamic> data) {
+    print(data);
+  }
+
+  // Send a Message to the server
+  sendMessage(String message) {
+    socket.emit(
+      "message",
+      {
+        "id": socket.id,
+        "message": message, // Message to be sent
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+      },
+    );
+  }
+
+  // Listen to all message events from connected users
+  void handleMessage(Map<String, dynamic> data) {
+    print(data);
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -115,17 +133,19 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              '123',
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          sendMessage("coucou les amis");
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ), // This trailing comm
     );
   }
 }

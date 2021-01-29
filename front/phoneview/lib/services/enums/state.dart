@@ -1,1 +1,0 @@
-enum State { CONNECTED, DISCONNECTED }

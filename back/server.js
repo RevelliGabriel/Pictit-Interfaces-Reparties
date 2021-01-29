@@ -15,6 +15,7 @@ const createServer = (http) => {
             console.log('Listening on port %d', port);
         },
         identify(socket, req) {
+            console.log("Identifing : ", socket.id);
             if (!(req.name in clients)) {
                 // const player = createPlayer(socket, req.name);
                 const player = req;
@@ -33,10 +34,12 @@ const createServer = (http) => {
                 // });
 
                 socket.on('disconnect', () => {
+                    console.log(player.name ," has left the game")
                    gameManager.playerDisconnect.apply(gameManager, [player]); 
                 });
 
                 socket.on('join', (req) => {
+                    console.log(player.name, " joined ", req.name);
                     gameManager.joinGame.apply(gameManager, [player, req]);
                 });
             } else {
@@ -48,7 +51,7 @@ const createServer = (http) => {
 
     }
     const manageSocket = (socket) => {
-        console.log("client connected")
+        console.log("client connected : ", socket.id)
         socket.on('identify', (req) => obj.identify.apply(gameManager, [socket, req]));
     };
     io.on('connection', manageSocket);

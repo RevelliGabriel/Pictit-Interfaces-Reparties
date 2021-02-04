@@ -6,9 +6,9 @@ const createPlayer = (socket, name) => {
         hand: [],
         position: '',
         game: null,
-        isIntrus : false,
+        isIntrus: false,
 
-        setIntrus(){
+        setIntrus() {
             this.isIntrus = true;
         },
         setPosition(pos) {
@@ -32,10 +32,14 @@ const createPlayer = (socket, name) => {
             console.log("emit hand to client")
             return new Promise((resolve, reject) => {
                 socket.emit('hand', { cards: cards }, (resp) => {
-                    socket.on('hand-ok', (req) => {
-                        console.log("hand emited sucess : ", req)
-                        resolve(resp);
-                    });
+                    // socket.on('hand-ok', (req) => {
+                    //     console.log("hand emited sucess : ", req)
+                    //     resolve(resp);
+                    // });
+                });
+                socket.on('hand-ok', (req) => {
+                    console.log("hand emited sucess : ", req)
+                    resolve(req);
                 });
             });
         },

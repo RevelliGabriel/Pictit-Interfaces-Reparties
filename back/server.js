@@ -42,6 +42,7 @@ const createServer = (http) => {
                     gameManager.joinGame.apply(gameManager, [player, req]);
                 });
             } else {
+                console.log("Name already taken")
             }
         },
         getPlayerByName(name) {

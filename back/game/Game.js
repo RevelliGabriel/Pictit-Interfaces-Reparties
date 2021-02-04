@@ -76,7 +76,7 @@ const createGame = (name) => {
             return Promise.all(promises);
         },
         canStart() {
-            return this.players.length === 4;
+            return this.players.length === 2;
         },
         getCurrentPlayer() {
             return this.players[this.currentPosPlayer];
@@ -87,7 +87,7 @@ const createGame = (name) => {
         },
         generateIntrus() {
             min = Math.ceil(0);
-            max = Math.floor(3);
+            max = Math.floor(1);
             this.intrusPosPlayer = Math.floor(Math.random() * (max - min)) + min;
             console.log("intrus pos : ", this.intrusPosPlayer)
         },

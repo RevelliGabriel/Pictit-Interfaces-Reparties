@@ -1,9 +1,12 @@
+const Deck = require('./Deck');
+
 const createGame = (name) => {
     const obj = {
         name: name,
         // players: {},
         deck: new Deck(),
-        board: new Board(),
+        // board: new Board(),
+        board: null,
         trades: [],
         players: [],
         currentPosPlayer: 0,
@@ -13,6 +16,7 @@ const createGame = (name) => {
             if (!this.hasPlayer(player)) {
                 // this.players[player.name] = player;
                 this.players.push(player);
+                player.setPosition(this.players.length-1);
                 console.log("\t--new player join the game : ", player.name)
                 player.setGame(this);
                 return true;
@@ -22,6 +26,9 @@ const createGame = (name) => {
         },
         notifyGameBoard(){
             this.board.notify(this.players)
+        },
+        deletePlayer(player) {
+            delete this.players[player.position];
         },
         hasPlayer(player) {
             // console.log("hasPlayer check, player :", player)
@@ -75,10 +82,14 @@ const createGame = (name) => {
             return this.players[this.currentPosPlayer];
         },
         getIntrusPlayer() {
+            // console.log("get intrus player : ", this.players[this.intrusPosPlayer].name)
             return this.players[this.intrusPosPlayer];
         },
         generateIntrus() {
-            this.intrusPosPlayer = Math.random() * (3 - 0) + 0;
+            min = Math.ceil(0);
+            max = Math.floor(3);
+            this.intrusPosPlayer = Math.floor(Math.random() * (max - min)) + min;
+            console.log("intrus pos : ", this.intrusPosPlayer)
         },
         launch() {
             console.log('\nAll players are ready, the game is launched !!');

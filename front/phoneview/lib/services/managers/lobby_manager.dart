@@ -18,6 +18,11 @@ class LobbyManager implements Manager {
     _socket.on('identify', (_) {
       print('connect: ${_socket.id}');
     });
+
+    _socket.on('hand', (data) {
+      print('get hand from server: $data');
+      _socket.emit('hand-ok', "ok");
+    });
   }
 
   Future<bool> identify(String name) async {

@@ -40,6 +40,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ConnectionManager connectionManager = Global().fetch(ConnectionManager);
   LobbyManager lobbyManager = Global().fetch(LobbyManager);
+  final _controller = TextEditingController();
 
   @override
   void initState() {
@@ -81,10 +82,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               },
             ),
+            TextField(
+              controller: _controller,
+            ),
             RaisedButton(
                 child: Text("Identify"),
                 onPressed: () {
-                  lobbyManager.identify("Jean");
+                  lobbyManager.identify(_controller.text.toString());
                 }),
             RaisedButton(
                 child: Text("Join"),

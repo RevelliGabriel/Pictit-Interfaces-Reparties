@@ -29,10 +29,13 @@ const createPlayer = (socket, name) => {
         },
         setHand(cards) {
             this.hand.push(...cards);
+            console.log("emit hand to client")
             return new Promise((resolve, reject) => {
                 socket.emit('hand', { cards: cards }, (resp) => {
-                    console.log("hand emited to client")
-                    resolve(resp);
+                    socket.on('hand-ok', (req) => {
+                        console.log("hand emited sucess : ", req)
+                        resolve(resp);
+                    });
                 });
             });
         },

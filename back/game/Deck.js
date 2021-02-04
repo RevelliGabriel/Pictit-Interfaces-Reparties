@@ -16,7 +16,7 @@ module.exports = class Deck {
         }
     }
 
-    cutIn4Half() {
+    cutIn4() {
         this.shuffle();
         let posCards = 0;
         const hands = []

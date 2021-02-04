@@ -1,4 +1,4 @@
-// const createPlayer = require('./contree/Player');
+const createPlayer = require('./game/Player');
 // const createGame = require('./contree/Game');
 const createGameManager = require('./game-manager');
 const ioServer = require('socket.io');
@@ -17,8 +17,7 @@ const createServer = (http) => {
         identify(socket, req) {
             console.log("Identifing : ", socket.id);
             if (!(req.name in clients)) {
-                // const player = createPlayer(socket, req.name);
-                const player = req;
+                const player = createPlayer(socket, req.name);
 
                 clients[req.name] = player;
 
@@ -39,7 +38,7 @@ const createServer = (http) => {
                 });
 
                 socket.on('join', (req) => {
-                    console.log(player.name, " joined ", req.name);
+                    console.log(player.name, " joined", req.name);
                     gameManager.joinGame.apply(gameManager, [player, req]);
                 });
             } else {

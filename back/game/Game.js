@@ -84,6 +84,7 @@ const createGame = (name) => {
             console.log('\nAll players are ready, the game is launched !!');
             console.log('\t\t', this.name, " started..!");
             this.generateIntrus();
+            this.getIntrusPlayer().setIntrus();
             console.log("L'intrus est : ", this.getIntrusPlayer().name)
             console.log("\nDebut de la distribution")
             return this.distribute().then(resp => {

@@ -6,7 +6,11 @@ const createPlayer = (socket, name) => {
         hand: [],
         position: '',
         game: null,
+        isIntrus : false,
 
+        setIntrus(){
+            this.isIntrus = true;
+        },
         setPosition(pos) {
             this.position = pos;
         },

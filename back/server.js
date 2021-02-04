@@ -34,7 +34,7 @@ const createServer = (http) => {
 
                 socket.on('disconnect', () => {
                     console.log(player.name ," has left the game")
-                   gameManager.playerDisconnect.apply(gameManager, [player]); 
+                    gameManager.playerDisconnect.apply(gameManager, [player]); 
                 });
 
                 socket.on('join', (req) => {

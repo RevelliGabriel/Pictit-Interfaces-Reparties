@@ -5,7 +5,7 @@ const createPlayer = (socket, name) => {
         name: name,
         hand: [],
         position: '',
-        game: null,
+        //game: null,
         isIntrus: false,
 
         setIntrus() {
@@ -14,13 +14,13 @@ const createPlayer = (socket, name) => {
         setPosition(pos) {
             this.position = pos;
         },
-        disconnect() {
-            if (this.game !== null)
-                this.game.deletePlayer(this);
-        },
-        setGame(game) {
-            this.game = game;
-        },
+        // disconnect() {
+        //     if (this.game !== null)
+        //         this.game.deletePlayer(this);
+        // },
+        // setGame(game) {
+        //     this.game = game;
+        // },
         getPosition() {
             return this.position
         },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/services/managers/connection_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/managers/lobby_manager.dart';
-import 'package:front/views/pages/main_menu.dart';
+import 'package:front/views/web_pages/web_wrapper.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -45,10 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  Widget get connectedText => Text("Connecté");
-
-  Widget get disconnectedText => Text("Pas Connecté");
-
   // Listen to all message events from connected users
   void handleMessage(Map<String, dynamic> data) {
     print(data);
@@ -62,10 +58,15 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Container(),
+      body: GestureDetector(
+        child: Wrapper(),
+        onTap: () {
+          lobbyManager.identify("board");
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          connectionManager.toggleConnection();
+          connectionManager.connect();
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),

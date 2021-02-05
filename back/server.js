@@ -20,8 +20,9 @@ const createServer = (http) => {
             if (req.name == 'board' ){
                 const board = createBoard(socket, "SuperGame1")
                 gameManager.addBoard(board)
+                console.log("\n--new board identify : ", board.name);
             }
-            if (!(req.name in clients)) {
+            else if (!(req.name in clients)) {
                 const player = createPlayer(socket, req.name);
 
                 clients[req.name] = player;

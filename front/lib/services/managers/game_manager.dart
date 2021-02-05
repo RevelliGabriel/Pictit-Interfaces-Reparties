@@ -13,7 +13,9 @@ class GameManager implements Manager {
   Socket _socket;
   StreamController<GameStepEnum> _gameStepController =
       StreamController.broadcast();
+  StreamController<bool> _gameUpdated = StreamController.broadcast();
 
+  Stream<bool> get gameUpdatedStream => _gameUpdated.stream;
   Stream<GameStepEnum> get gameStepStream => _gameStepController.stream;
 
   void _addStep(GameStepEnum gameStep) {
@@ -25,13 +27,12 @@ class GameManager implements Manager {
     me = Player();
     other = Player();
 
-    game = Game([], GameStepEnum.IDENTIFYING);
+    game = Game();
     _addStep(GameStepEnum.IDENTIFYING);
 
     _socket = socket;
 
     _socket.on('game-started', (dynamic json) {
-      me.addFromJsonPosition(json['position']);
       me.addFromJsonIsIntru(json['isIntru']);
       print("game started babys");
     });
@@ -50,6 +51,11 @@ class GameManager implements Manager {
       }
       print(me.gameCards.toString());
     });
+
+    _socket.on('update-game', (dynamic json) {
+      game.updateGameFromJson(json['game']);
+      _gameUpdated.sink.add(true);
+    });
   }
 
   Future<bool> tradeCard(int id) async {
@@ -67,6 +73,7 @@ class GameManager implements Manager {
 
   @override
   void dispose() {
+    _gameUpdated.close();
     _gameStepController.close();
     // TODO: implement dispose
   }

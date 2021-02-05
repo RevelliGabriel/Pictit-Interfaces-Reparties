@@ -45,10 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  Widget get connectedText => Text("Connecté");
-
-  Widget get disconnectedText => Text("Pas Connecté");
-
   // Listen to all message events from connected users
   void handleMessage(Map<String, dynamic> data) {
     print(data);

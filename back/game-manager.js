@@ -35,7 +35,9 @@ const createGameManager = () => {
             delete availableGames[name];
         },
         playerDisconnect(player) {
-            player.disconnect();
+            //player.disconnect();
+            const game = this.getGameWithName("SuperGame1");
+            game.deletePlayer(player);
         },
     }
     return obj;

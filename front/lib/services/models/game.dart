@@ -1,18 +1,16 @@
-import 'dart:convert';
-
+import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/enums/game_step_enums.dart';
-import 'package:front/services/models/card.dart';
 import 'package:front/services/models/player.dart';
 
 class Game {
+  String name;
   List<Player> players;
-  List<GameCard> deck;
   GameStepEnum status;
 
-  Game(List<Player> players, GameStepEnum status) {
-    this.status = status;
-    this.players = players;
-    this.deck = [];
+  Game() {
+    this.name = "";
+    this.status = GameStepEnum.IDENTIFYING;
+    this.players = [];
   }
 
   Game.fromJson(dynamic jsonGame) {
@@ -20,6 +18,24 @@ class Game {
       this.players.add(Player.fromJson(jsonPlayer));
     }
     this.status = GameStepEnum.values.elementAt((jsonGame['status'] as int));
-    this.deck = [];
+  }
+
+  void updateGameFromJson(dynamic json) {
+    this.players = [];
+    for (dynamic jsonPlayer in json['players']) {
+      print(jsonPlayer);
+      this.players.add(Player.fromJson(jsonPlayer));
+    }
+    this.name = json['name'];
+    this.players.elementAt(json['intrusPosPlayer'] as int).isIntrus = true;
+    setPlayerPlaying(json['currentPosPlayer'] as int);
+  }
+
+  void setPlayerPlaying(int pos) {
+    if (status != GameStepEnum.IDENTIFYING) {
+      this.players.map((e) => e.state = GamePlayerStateEnum.WAITING);
+      this.players.elementAt(pos).state = GamePlayerStateEnum.PLAYING;
+    }
+    this.players.map((e) => e.state = GamePlayerStateEnum.JOINED_GAME);
   }
 }

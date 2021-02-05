@@ -15,14 +15,15 @@ const createGame = (name) => {
 
         addBoard(board){
             this.board = board
-            this.board.setGame(this)
+            //this.board.setGame(this)
         },
         addPlayer(player) {
             if (!this.hasPlayer(player)) {
                 this.players.push(player);
                 player.setPosition(this.players.length-1);
-                player.setGame(this);
-                this.board.notifyPlayersList(this.players)
+                //player.setGame(this);
+                //this.board.notifyPlayersList(this.players);
+                this.board.notifyGameChange(this)
                 console.log("\t--new player join the game : ", player.name)
                 return true;
             }
@@ -137,12 +138,12 @@ const createGame = (name) => {
             console.log('\t\t', this.name, " started..!");
             this.generateIntrus();
             this.getIntrusPlayer().setIntrus();
-            console.log("L'intrus est : ", this.getIntrusPlayer().name)
+            console.log("L'intrus est : ", this.getIntrusPlayer().name);
             this.notifyAllPlayers('game-started');
-            console.log("\nDebut de la distribution")
+            console.log("\nDebut de la distribution");
             return this.distribute().then(resp => {
-                console.log("Fin de la distribution")
-                console.log("\nDebut des trades")
+                console.log("Fin de la distribution");
+                console.log("\nDebut des trades");
                 return this.tradeCardsOneByOne();
             }).then(resp => {
                 // le jeu

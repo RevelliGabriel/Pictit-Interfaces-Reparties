@@ -1,6 +1,5 @@
 enum GamePlayerStateEnum {
-  IN_LOBBY,
-  IN_GAME,
+  JOINED_GAME,
   PLAYING,
   WAITING,
 }

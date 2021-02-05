@@ -4,10 +4,14 @@ const createBoard = (socket, name) => {
     const obj = {
         name: name,
         state: null,
-        game: null,
+        //game: null,
 
-        notifyPlayersList(players) {
-            socket.emit('update-players', players)
+        // setGame(game){
+        //     this.game = game;
+        // },
+
+        notifyGameChange(game) {
+            socket.emit('update-game', { game : game})
         }
     }
 

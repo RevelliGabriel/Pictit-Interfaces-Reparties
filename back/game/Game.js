@@ -13,11 +13,16 @@ const createGame = (name) => {
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
 
+        addBoard(board){
+            this.board = board
+            this.board.setGame(this)
+        },
         addPlayer(player) {
             if (!this.hasPlayer(player)) {
                 this.players.push(player);
                 player.setPosition(this.players.length-1);
                 player.setGame(this);
+                this.board.notifyPlayersList(this.players)
                 console.log("\t--new player join the game : ", player.name)
                 return true;
             }
@@ -85,9 +90,10 @@ const createGame = (name) => {
             return this.notifyAllPlayers('new-hands');
         },
         setNewCardsToPlayers(){
-            for(let trade in this.trades){
+            for(let trade of this.trades){
                 _player = trade.player;
                 _otherPlayer = trade.playerToSteal;
+                cardId = trade.cardToSteal
                 console.log('Old cards for players : ')
                 console.log(_player.name, " : ", _player.hand)
                 console.log(_otherPlayer.name, " : ", _otherPlayer.hand)
@@ -108,7 +114,7 @@ const createGame = (name) => {
             return Promise.all(promises);
         },
         canStart() {
-            return this.players.length === 2;
+            return this.players.length === 2 && this.board != null;
         },
         getCurrentPlayer() {
             return this.players[this.currentPosPlayer];

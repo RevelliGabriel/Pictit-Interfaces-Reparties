@@ -2,6 +2,7 @@ const createPlayer = require('./game/Player');
 // const createGame = require('./contree/Game');
 const createGameManager = require('./game-manager');
 const ioServer = require('socket.io');
+const createBoard = require('./game/Board');
 
 
 const createServer = (http) => {
@@ -16,6 +17,10 @@ const createServer = (http) => {
         },
         identify(socket, req) {
             console.log("Identifing : ", socket.id);
+            if (req.name == 'board' ){
+                const board = createBoard(socket, "SuperGame1")
+                gameManager.addBoard(board)
+            }
             if (!(req.name in clients)) {
                 const player = createPlayer(socket, req.name);
 

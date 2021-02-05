@@ -16,7 +16,7 @@ class Global {
   Map<dynamic, Manager> repository = {};
 
   Map<dynamic, Function(dynamic)> _factories = {
-    GameManager: (socket) => GameManager(),
+    GameManager: (socket) => GameManager(socket),
     LobbyManager: (socket) => LobbyManager(socket),
     ConnectionManager: (socket) => ConnectionManager(socket)
   };

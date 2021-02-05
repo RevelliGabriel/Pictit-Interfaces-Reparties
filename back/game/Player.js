@@ -48,7 +48,7 @@ const createPlayer = (socket, name) => {
             });
         },
         notifyGameLaunched(){
-            console.log("Sending to player", this.name, " position (", this.isIntrus,") and isIntrus(", this.isIntrus,")");
+            console.log("Sending to player", this.name, " position (", this.position,") and isIntrus(", this.isIntrus,")");
             socket.emit('game-started', { position: this.position, isIntrus: this.isIntrus });
         },
         askTrade(nextPlayer){
@@ -56,7 +56,7 @@ const createPlayer = (socket, name) => {
             return new Promise((resolve, reject) => {
                 socket.emit('trade-cards', { cards: cards })
                 socket.on('card-trade', (cardId) => {
-                    console.log("Player ", this.name, " trade card of next player ", this.nextPlayer.name, " : card ", cardId)
+                    console.log("Player ", this.name, " trade card of next player ", nextPlayer.name, " : card ", cardId)
                     resolve(cardId);
                 });
             })

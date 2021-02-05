@@ -44,6 +44,7 @@ class ConnectionManager implements Manager {
       if (_currentConnectionStateEnum != ConnectionStateEnum.CONNECTED) {
         // Connect to websocket
         _socket.connect();
+        _setState(ConnectionStateEnum.CONNECTED);
       }
     } catch (e) {
       print(e.toString());

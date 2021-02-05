@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:phoneview/services/enums/connection_state_enum.dart';
 import 'package:phoneview/services/managers/connection_manager.dart';
 import 'package:phoneview/services/managers/global.dart';
 import 'package:phoneview/services/managers/lobby_manager.dart';
+import 'package:phoneview/views/pages/main_menu.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() {
   runApp(MyApp());
@@ -40,12 +39,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ConnectionManager connectionManager = Global().fetch(ConnectionManager);
   LobbyManager lobbyManager = Global().fetch(LobbyManager);
-  final _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    connectionManager.connect();
   }
 
   Widget get connectedText => Text("Connecté");
@@ -65,39 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            StreamBuilder<ConnectionStateEnum>(
-              initialData: ConnectionStateEnum.DISCONNECTED,
-              stream: connectionManager.connectionStateStream,
-              builder: (context, snapshot) {
-                if (snapshot.data == ConnectionStateEnum.CONNECTED) {
-                  return connectedText;
-                } else {
-                  return disconnectedText;
-                }
-              },
-            ),
-            TextField(
-              controller: _controller,
-            ),
-            RaisedButton(
-                child: Text("Identify"),
-                onPressed: () {
-                  lobbyManager.identify(_controller.text.toString());
-                }),
-            RaisedButton(
-                child: Text("Join"),
-                onPressed: () {
-                  lobbyManager.join();
-                }),
-          ],
-        ),
-      ),
+      body: MainMenu(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           connectionManager.toggleConnection();

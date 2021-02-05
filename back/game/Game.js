@@ -8,7 +8,7 @@ const createGame = (name) => {
         deck: new Deck(),
         // board: new Board(),
         board: null,
-        trades: {},
+        trades: [],
         players: [],
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
@@ -88,6 +88,9 @@ const createGame = (name) => {
             for(let trade in this.trades){
                 _player = trade.player;
                 _otherPlayer = trade.playerToSteal;
+                console.log('Old cards for players : ')
+                console.log(_player.name, " : ", _player.hand)
+                console.log(_otherPlayer.name, " : ", _otherPlayer.hand)
                 _player.hand.push(new Card(trade.cardToSteal))
                 _otherPlayer.hand = _otherPlayer.hand.filter(card => {return card.id != cardId})
                 console.log('New cards for players : ')

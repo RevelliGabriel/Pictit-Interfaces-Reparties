@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/managers/lobby_manager.dart';
 
-class Identify extends StatefulWidget {
+class PlayerIdentify extends StatefulWidget {
   @override
-  _IdentifyState createState() => _IdentifyState();
+  _PlayerIdentifyState createState() => _PlayerIdentifyState();
 }
 
-class _IdentifyState extends State<Identify> {
+class _PlayerIdentifyState extends State<PlayerIdentify> {
   final _controller = TextEditingController();
   LobbyManager lobbyManager = Global().fetch(LobbyManager);
 

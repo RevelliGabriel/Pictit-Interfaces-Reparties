@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:front/services/enums/connection_state_enum.dart';
 import 'package:front/services/managers/connection_manager.dart';
 import 'package:front/services/managers/global.dart';
-import 'package:front/views/pages/identify.dart';
-import 'package:front/views/pages/wrapper.dart';
+import 'package:front/views/player_pages/player_wrapper.dart';
 
-class MainMenu extends StatefulWidget {
+class PlayerMenu extends StatefulWidget {
   @override
-  _MainMenuState createState() => _MainMenuState();
+  _PlayerMenuState createState() => _PlayerMenuState();
 }
 
-class _MainMenuState extends State<MainMenu> {
+class _PlayerMenuState extends State<PlayerMenu> {
   ConnectionManager connectionManager = Global().fetch(ConnectionManager);
 
   @override
@@ -31,7 +30,7 @@ class _MainMenuState extends State<MainMenu> {
         initialData: ConnectionStateEnum.DISCONNECTED,
         builder: (context, snapshot) {
           if (snapshot.data == ConnectionStateEnum.CONNECTED) {
-            return Wrapper();
+            return PlayerWrapper();
           }
           return Container(
             child: Row(

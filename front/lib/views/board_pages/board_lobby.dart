@@ -3,12 +3,12 @@ import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/views/components/show_players.dart';
 
-class Lobby extends StatefulWidget {
+class BoardLobby extends StatefulWidget {
   @override
-  _LobbyState createState() => _LobbyState();
+  _BoardLobbyState createState() => _BoardLobbyState();
 }
 
-class _LobbyState extends State<Lobby> {
+class _BoardLobbyState extends State<BoardLobby> {
   GameManager gameManager = Global().fetch(GameManager);
 
   @override

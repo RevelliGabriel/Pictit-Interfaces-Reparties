@@ -4,14 +4,14 @@ import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/card.dart';
 import 'package:front/views/components/show_hand.dart';
-import 'package:front/views/pages/identify.dart';
+import 'package:front/views/player_pages/player_identify.dart';
 
-class Wrapper extends StatefulWidget {
+class PlayerWrapper extends StatefulWidget {
   @override
-  _WrapperState createState() => _WrapperState();
+  _PlayerWrapperState createState() => _PlayerWrapperState();
 }
 
-class _WrapperState extends State<Wrapper> {
+class _PlayerWrapperState extends State<PlayerWrapper> {
   GameManager gameManager = Global().fetch(GameManager);
 
   @override
@@ -21,7 +21,7 @@ class _WrapperState extends State<Wrapper> {
         initialData: GameStepEnum.IDENTIFYING,
         builder: (context, snapshot) {
           if (snapshot.data == GameStepEnum.IDENTIFYING) {
-            return Identify();
+            return PlayerIdentify();
           } else if (snapshot.data == GameStepEnum.DISTRIBUTION) {
             return Column(
               children: [

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/services/managers/connection_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/managers/lobby_manager.dart';
-import 'package:front/views/web_pages/web_wrapper.dart';
+import 'package:front/views/board_pages/board_wrapper.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: GestureDetector(
-        child: Wrapper(),
+        child: BoardWrapper(),
         onTap: () {
           lobbyManager.identify("board");
         },

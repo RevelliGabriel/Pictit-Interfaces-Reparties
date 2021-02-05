@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
-import 'package:front/services/models/card.dart';
+import 'package:front/views/board_pages/board_lobby.dart';
 import 'package:front/views/components/show_hand.dart';
-import 'package:front/views/web_pages/web_lobby.dart';
 
-class Wrapper extends StatefulWidget {
+class BoardWrapper extends StatefulWidget {
   @override
-  _WrapperState createState() => _WrapperState();
+  _BoardWrapperState createState() => _BoardWrapperState();
 }
 
-class _WrapperState extends State<Wrapper> {
+class _BoardWrapperState extends State<BoardWrapper> {
   GameManager gameManager = Global().fetch(GameManager);
 
   @override
@@ -21,7 +20,7 @@ class _WrapperState extends State<Wrapper> {
         initialData: GameStepEnum.IDENTIFYING,
         builder: (context, snapshot) {
           if (snapshot.data == GameStepEnum.IDENTIFYING) {
-            return Lobby();
+            return BoardLobby();
           } else if (snapshot.data == GameStepEnum.DISTRIBUTION) {
             return Column(
               children: [

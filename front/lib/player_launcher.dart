@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/services/managers/connection_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/managers/lobby_manager.dart';
-import 'package:front/views/pages/main_menu.dart';
+import 'package:front/views/player_pages/player_menu.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: MainMenu(),
+      body: PlayerMenu(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           connectionManager.toggleConnection();

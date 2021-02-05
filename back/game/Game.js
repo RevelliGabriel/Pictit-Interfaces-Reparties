@@ -1,3 +1,4 @@
+const Card = require('./Card');
 const Deck = require('./Deck');
 
 const createGame = (name) => {
@@ -7,18 +8,17 @@ const createGame = (name) => {
         deck: new Deck(),
         // board: new Board(),
         board: null,
-        trades: [],
+        trades: {},
         players: [],
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
 
         addPlayer(player) {
             if (!this.hasPlayer(player)) {
-                // this.players[player.name] = player;
                 this.players.push(player);
                 player.setPosition(this.players.length-1);
-                console.log("\t--new player join the game : ", player.name)
                 player.setGame(this);
+                console.log("\t--new player join the game : ", player.name)
                 return true;
             }
             // console.log("\t...player trying to join game but already in game : ", player.name)
@@ -51,19 +51,48 @@ const createGame = (name) => {
                 pos++;
             return pos
         },
-        async askCards() {
-            return this.getCurrentPlayer().askTrade(this.incrementPos(this.currentPosPlayer)).then(trade => {
+        notifyAllPlayers(topic){
+            if (topic == 'game-started'){
+                for (let i = 0; i < this.players.length; ++i) {
+                    this.players[i].notifyGameLaunched();
+                }
+            } else if (topic == 'new-hands'){
+                for (let i = 0; i < this.players.length; ++i) {
+                    this.players[i].notifyHand();
+                }
+            }
+            return true;
+        },
+        askCards() {
+            return this.getCurrentPlayer().askTrade(this.getNextPlayer()).then(cardId => {
+                var trade = {
+                    player : this.getCurrentPlayer(),
+                    playerToSteal: this.getNextPlayer(),
+                    cardToSteal : cardId,
+                }
                 this.trades.push(trade);
-                return this.forwardCards(trade);
             });
         },
-        tradeCardsOneByOne(){
-            //await this.forwardBeginTrade();
+        async tradeCardsOneByOne(){
+            // await this.forwardBeginTrade();
             while(true) {
-                // const res = await this.askCards();
+                await this.askCards();
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
                 if (this.currentPosPlayer === 0)
                     break;
+            }
+            this.setNewCardsToPlayers();
+            return this.notifyAllPlayers('new-hands');
+        },
+        setNewCardsToPlayers(){
+            for(let trade in this.trades){
+                _player = trade.player;
+                _otherPlayer = trade.playerToSteal;
+                _player.hand.push(new Card(trade.cardToSteal))
+                _otherPlayer.hand = _otherPlayer.hand.filter(card => {return card.id != cardId})
+                console.log('New cards for players : ')
+                console.log(_player.name, " : ", _player.hand)
+                console.log(_otherPlayer.name, " : ", _otherPlayer.hand)
             }
         },
         distribute() {
@@ -81,6 +110,9 @@ const createGame = (name) => {
         getCurrentPlayer() {
             return this.players[this.currentPosPlayer];
         },
+        getNextPlayer() {
+            return this.players[this.incrementPos(this.currentPosPlayer)];
+        },
         getIntrusPlayer() {
             // console.log("get intrus player : ", this.players[this.intrusPosPlayer].name)
             return this.players[this.intrusPosPlayer];
@@ -97,11 +129,12 @@ const createGame = (name) => {
             this.generateIntrus();
             this.getIntrusPlayer().setIntrus();
             console.log("L'intrus est : ", this.getIntrusPlayer().name)
+            this.notifyAllPlayers('game-started');
             console.log("\nDebut de la distribution")
             return this.distribute().then(resp => {
                 console.log("Fin de la distribution")
                 console.log("\nDebut des trades")
-                this.tradeCardsOneByOne()
+                return this.tradeCardsOneByOne();
             }).then(resp => {
                 // le jeu
             })

@@ -27,6 +27,10 @@ const createGameManager = () => {
                 }
             }
         },
+        addBoard(board){
+            const game = this.getGameWithName(board.name);
+            game.addBoard(board)
+        },
         deleteGameWithName(name) {
             delete availableGames[name];
         },

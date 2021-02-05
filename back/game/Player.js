@@ -39,6 +39,7 @@ const createPlayer = (socket, name) => {
             });
         },
         notifyHand(){
+            console.log("sending new hand to player", this.name)
             return new Promise((resolve, reject) => {
                 socket.emit('hand', { cards: this.hand });
                 socket.on('hand-ok', (req) => {

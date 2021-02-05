@@ -1,13 +1,23 @@
-import 'package:phoneview/services/managers/connection_manager.dart';
+import 'dart:async';
+
+import 'package:phoneview/services/managers/game_manager.dart';
 import 'package:phoneview/services/managers/manager.dart';
+import 'package:phoneview/services/models/player.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import 'global.dart';
 
 class LobbyManager implements Manager {
-  ConnectionManager _connectionManager = Global().fetch(ConnectionManager);
+  // Variables
+  GameManager _gameManager = Global().fetch(GameManager);
+  StreamController<List<Player>> _myIentificationStreamController =
+      StreamController.broadcast();
   Socket _socket;
 
+  // Getters
+  Stream get inLobbyPlayersStream => _myIentificationStreamController.stream;
+
+  // Constructors
   LobbyManager(Socket socket) {
     _socket = socket;
 
@@ -20,6 +30,7 @@ class LobbyManager implements Manager {
     });
   }
 
+  // Socket functions
   Future<bool> identify(String name) async {
     try {
       _socket.emit(
@@ -31,6 +42,8 @@ class LobbyManager implements Manager {
           "timestamp": DateTime.now().millisecondsSinceEpoch,
         },
       );
+      // initialisation du player
+      _gameManager.me = Player(name);
       return true;
     } catch (e) {
       print(e.toString());
@@ -53,6 +66,7 @@ class LobbyManager implements Manager {
 
   @override
   void dispose() {
+    _myIentificationStreamController.close();
     // TODO: implement dispose
   }
 }

@@ -40,6 +40,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ConnectionManager connectionManager = Global().fetch(ConnectionManager);
   LobbyManager lobbyManager = Global().fetch(LobbyManager);
+  final _controller = TextEditingController();
 
   @override
   void initState() {

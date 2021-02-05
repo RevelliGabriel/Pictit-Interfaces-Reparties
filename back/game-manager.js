@@ -20,6 +20,7 @@ const createGameManager = () => {
         joinGame(player, req) {
             const game = this.getGameWithName(req.name);
             if (game.addPlayer(player)) {
+                // game.notifyGameBoard();
                 if (game.canStart()) {
                     this.deleteGameWithName(game.name);
                     game.launch();
@@ -30,7 +31,7 @@ const createGameManager = () => {
             delete availableGames[name];
         },
         playerDisconnect(player) {
-            // player.disconnect();
+            player.disconnect();
         },
     }
     return obj;

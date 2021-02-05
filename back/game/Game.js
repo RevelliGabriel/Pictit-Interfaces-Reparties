@@ -85,9 +85,10 @@ const createGame = (name) => {
             return this.notifyAllPlayers('new-hands');
         },
         setNewCardsToPlayers(){
-            for(let trade in this.trades){
+            for(let trade of this.trades){
                 _player = trade.player;
                 _otherPlayer = trade.playerToSteal;
+                const cardId = trade.cardToSteal;
                 console.log('Old cards for players : ')
                 console.log(_player.name, " : ", _player.hand)
                 console.log(_otherPlayer.name, " : ", _otherPlayer.hand)

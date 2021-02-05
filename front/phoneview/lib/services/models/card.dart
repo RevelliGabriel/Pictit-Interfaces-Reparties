@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 
 class GameCard {
   // variables
-  bool _isFaceUp;
-  bool _isSelected;
   String path;
-  final String _downPath = 'assets/images/GameCardBack.jpg';
+  final String _downPath = 'assets/images/CardBack.jpg';
   int id;
 
   // Constructor
   GameCard(String path, int id) {
-    _isFaceUp = false;
-    _isSelected = false;
     this.path = 'assets/images/' + path;
     this.id = id;
   }
@@ -19,20 +15,19 @@ class GameCard {
   GameCard.fromJson(dynamic jsonGameCard) {
     path = 'assets/images/' + (jsonGameCard['path'] as String);
     id = jsonGameCard['id'] as int;
-    _isFaceUp = false;
-    _isSelected = false;
   }
 
   // Getters
 
   // Functions
-  Widget show() {
+
+  Widget show(bool selected) {
     return Container(
-      height: 120,
-      width: 70,
+      height: selected ? 200 : 150,
+      width: selected ? 120 : 100,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.asset(_isFaceUp ? path : _downPath),
+        borderRadius: BorderRadius.circular(30),
+        child: Image.asset(path),
       ),
     );
   }

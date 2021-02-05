@@ -4,6 +4,7 @@ import 'package:phoneview/services/enums/connection_state_enum.dart';
 import 'package:phoneview/services/managers/connection_manager.dart';
 import 'package:phoneview/services/managers/global.dart';
 import 'package:phoneview/views/pages/identify.dart';
+import 'package:phoneview/views/pages/wrapper.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _MainMenuState extends State<MainMenu> {
         initialData: ConnectionStateEnum.DISCONNECTED,
         builder: (context, snapshot) {
           if (snapshot.data == ConnectionStateEnum.CONNECTED) {
-            return Identify();
+            return Wrapper();
           }
           return Container(
             child: Row(
@@ -39,7 +40,7 @@ class _MainMenuState extends State<MainMenu> {
                 Flexible(
                     flex: 1,
                     child: RaisedButton(
-                        child: Text("Identify"),
+                        child: Text("Jouer"),
                         onPressed: () {
                           connectionManager.connect();
                         })),

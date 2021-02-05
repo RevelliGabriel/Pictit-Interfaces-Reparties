@@ -45,7 +45,7 @@ const createGame = (name) => {
             return found;
         },
         incrementPos(pos) {
-            if (pos === player.length - 1)
+            if (pos === this.players.length - 1)
                 pos = 0;
             else
                 pos++;

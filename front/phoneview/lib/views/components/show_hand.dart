@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:phoneview/services/models/card.dart';
 
+// ignore: must_be_immutable
 class ShowHand extends StatefulWidget {
   final List<GameCard> cards;
+  final Function function;
+  // ignore: avoid_init_to_null
+  int selectedCardId = null;
 
-  ShowHand(this.cards);
+  ShowHand({this.cards, this.function, this.selectedCardId});
 
   @override
   _ShowHandState createState() => _ShowHandState();
@@ -17,7 +21,15 @@ class _ShowHandState extends State<ShowHand> {
         scrollDirection: Axis.horizontal,
         itemCount: widget.cards.length,
         itemBuilder: (context, index) {
-          return widget.cards.elementAt(index).show();
+          GameCard card = widget.cards.elementAt(index);
+          return GestureDetector(
+              onTap: () {
+                widget.function(card);
+                setState(() {
+                  widget.selectedCardId = card.id;
+                });
+              },
+              child: card.show(widget.selectedCardId == card.id));
         });
   }
 }

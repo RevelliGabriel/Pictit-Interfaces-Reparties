@@ -8,10 +8,10 @@ class Player {
   List<GameCard> gameCards;
   GamePlayerStateEnum state;
 
-  Player(String name) {
+  Player() {
     id = null;
     isIntrus = null;
-    this.name = name;
+    this.name = null;
     state = GamePlayerStateEnum.IN_LOBBY;
     gameCards = [];
   }

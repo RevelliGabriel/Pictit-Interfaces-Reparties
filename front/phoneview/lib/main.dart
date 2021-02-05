@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:phoneview/services/enums/connection_state_enum.dart';
 import 'package:phoneview/services/managers/connection_manager.dart';
 import 'package:phoneview/services/managers/global.dart';
 import 'package:phoneview/services/managers/lobby_manager.dart';
@@ -40,12 +39,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ConnectionManager connectionManager = Global().fetch(ConnectionManager);
   LobbyManager lobbyManager = Global().fetch(LobbyManager);
-  final _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    connectionManager.connect();
   }
 
   Widget get connectedText => Text("Connecté");

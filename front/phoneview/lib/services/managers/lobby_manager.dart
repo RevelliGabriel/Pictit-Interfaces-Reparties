@@ -47,8 +47,9 @@ class LobbyManager implements Manager {
           "timestamp": DateTime.now().millisecondsSinceEpoch,
         },
       );
+      join();
       // initialisation du player
-      _gameManager.me = Player(name);
+      _gameManager.me.name = name;
       return true;
     } catch (e) {
       print(e.toString());

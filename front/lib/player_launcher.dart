@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/services/managers/connection_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/managers/lobby_manager.dart';
+import 'package:front/services/themes/initial_theme.dart';
 import 'package:front/views/player_pages/player_menu.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +17,9 @@ class MyApp extends StatelessWidget {
     return Provider(
       create: (context) => Global(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        theme: InitialTheme().theme,
         home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
@@ -45,19 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  // Listen to all message events from connected users
-  void handleMessage(Map<String, dynamic> data) {
-    print(data);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: PlayerMenu(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

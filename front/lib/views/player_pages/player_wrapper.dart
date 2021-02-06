@@ -56,13 +56,13 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               children: [
                 Flexible(
                     flex: 1,
-                    child: Text("alors c'est quoi ton mot ? hein ? oh !")),
-                Flexible(
-                    flex: 1,
+                    child: Center(
+                        child: Text("alors c'est quoi ton mot ? hein ? oh !"))),
+                Expanded(
                     child: ShowHand(
-                      cards: gameManager.me.gameCards,
-                      disableSelection: true,
-                    ))
+                  cards: gameManager.me.gameCards,
+                  disableSelection: true,
+                ))
               ],
             );
           }

@@ -33,12 +33,12 @@ class _PlayerMenuState extends State<PlayerMenu> {
             return PlayerWrapper();
           }
           return Container(
-            child: Row(
+            child: Column(
               children: [
-                Flexible(child: Container()),
+                Flexible(flex: 1, child: Container()),
                 Flexible(
-                    flex: 1,
-                    child: RaisedButton(
+                    flex: 2,
+                    child: ElevatedButton(
                         child: Text("Jouer"),
                         onPressed: () {
                           connectionManager.connect();

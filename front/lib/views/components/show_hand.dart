@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/services/models/card.dart';
+import 'package:front/views/components/show_card.dart';
 
 // ignore: must_be_immutable
 class ShowHand extends StatefulWidget {
@@ -26,18 +27,27 @@ class _ShowHandState extends State<ShowHand> {
         itemCount: widget.cards.length,
         itemBuilder: (context, index) {
           GameCard card = widget.cards.elementAt(index);
-          return GestureDetector(
-              onTap: () {
-                if (widget.function != null) {
-                  widget.function(card);
-                }
-                if (!widget.disableSelection) {
-                  setState(() {
-                    widget.selectedCardId = card.id;
-                  });
-                }
-              },
-              child: card.show(widget.selectedCardId == card.id));
+          return Container(
+            margin: EdgeInsets.only(left: 5, right: 5),
+            child: GestureDetector(
+                onTap: () {
+                  if (widget.function != null) {
+                    widget.function(card);
+                  }
+                  if (!widget.disableSelection) {
+                    setState(() {
+                      widget.selectedCardId = card.id;
+                    });
+                  }
+                },
+                child: Center(
+                  child: ShowCard(
+                    card: card,
+                    selected: widget.selectedCardId == card.id,
+                    ratio: 1.5,
+                  ),
+                )),
+          );
         });
   }
 }

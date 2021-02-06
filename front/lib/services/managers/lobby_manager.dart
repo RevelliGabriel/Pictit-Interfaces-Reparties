@@ -63,7 +63,7 @@ class LobbyManager implements Manager {
         "join",
         {"name": "SuperGame1"},
       );
-      return true;
+      
     } catch (e) {
       print(e.toString());
       return false;

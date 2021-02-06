@@ -37,6 +37,12 @@ const createPlayer = (socket, name) => {
                     resolve(req);
                 });
             });
+        }, 
+        notifyPlayerOut(player){
+            if (this.player.name == player.name){
+                socket.emit('self-player-out');
+            }
+            socket.emit('player-out', player);
         },
         notifyWord(word){
             return new Promise((resolve, reject) => {
@@ -79,7 +85,26 @@ const createPlayer = (socket, name) => {
                     resolve(word);
                 });
             })
-        }
+        },
+        askCard(){
+            return new Promise((resolve, reject) => {
+                socket.emit('ask-card')
+                socket.on('choose-card', (card) => {
+                    console.log("Player ", this.name, " choose the card : ", card)
+                    resolve(card);
+                });
+            })
+        },
+        askVote(players){
+            return new Promise((resolve, reject) => {
+                var plys = players.map( elem => elem.name != this.name);
+                socket.emit('ask-vote', {players: players})
+                socket.on('choose-vote', (vote) => {
+                    console.log("Player ", this.name, " vote for : ", vote)
+                    resolve(vote);
+                });
+            })
+        },
     }
     return obj;
 }

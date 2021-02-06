@@ -13,6 +13,9 @@ const createGame = (name) => {
         words: [],
         word: "",
         players: [],
+        playersCards:[],
+        playerOut: null,
+        playersOut:  [],
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
 
@@ -32,6 +35,22 @@ const createGame = (name) => {
             }
             // console.log("\t...player trying to join game but already in game : ", player.name)
             return false;
+        },
+        getCurrentPlayer() {
+            return this.players[this.currentPosPlayer];
+        },
+        getNextPlayer() {
+            return this.players[this.incrementPos(this.currentPosPlayer)];
+        },
+        getIntrusPlayer() {
+            // console.log("get intrus player : ", this.players[this.intrusPosPlayer].name)
+            return this.players[this.intrusPosPlayer];
+        },
+        generateIntrus() {
+            min = Math.ceil(0);
+            max = Math.floor(this.players.length-1);
+            this.intrusPosPlayer = Math.floor(Math.random() * (max - min)) + min;
+            console.log("intrus pos : ", this.intrusPosPlayer)
         },
         notifyGameBoard(){
             this.board.notify(this.players)
@@ -75,10 +94,15 @@ const createGame = (name) => {
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyWord(this.word);
                 }
+            } else if (topic == 'player-out'){
+                this.board.notifyGameChange(this);
+                for (let i = 0; i < this.players.length; ++i) {
+                    this.players[i].notifyPlayerOut(this.playerOut);
+                }
             }
             return true;
         },
-        askCards() {
+        askTrades() {
             return this.getCurrentPlayer().askTrade(this.getNextPlayer()).then(cardId => {
                 var trade = {
                     player : this.getCurrentPlayer(),
@@ -96,7 +120,7 @@ const createGame = (name) => {
         async tradeCardsOneByOne(){
             // await this.forwardBeginTrade();
             while(true) {
-                await this.askCards();
+                await this.askTrades();
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
                 if (this.currentPosPlayer === 0)
                     break;
@@ -117,6 +141,43 @@ const createGame = (name) => {
                 console.log("Players words : ", this.words)
                 this.setNewWordToGame();
                 return this.notifyAllPlayers('new-word');
+            });
+        },
+        async playUntilSomeoneWin(){
+            while(true){
+                // playturn
+                await this.playOneTrun();
+                if (this.playerOut.position == this.intrusPosPlayer){
+                    // this.getIntrusPlayer().askLastWord();
+                    // fin du jeu
+                    break;
+                } else if (this.players.length == 1){
+                    // un joueur a gagné
+                    // fin du jeu
+                    break;
+                }
+                // replay till players here
+            }
+        },
+        async playOneTrun(){
+            for (let player of this.players) {
+                let card = await player.askCard();
+                this.playersCards[this.currentPosPlayer] = card;
+                this.board.notifyGameChange(this);
+                this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
+            }
+            return this.askVotes();
+        },
+        askVotes(){
+            Promise.all(this.players.map(player => player.askVote(this.players))).then((votes) => {
+                console.log("Players votes : ", votes)
+                // compute votes and determine player
+                // this.setNewWordToGame();
+                let indexPlayerOut = 0;
+                this.playerOut = this.players[indexPlayerOut];
+                this.deletePlayer(playerOut);
+                this.playersOut.push(this.playerOut);
+                return this.notifyAllPlayers('player-out');
             });
         },
         setNewCardsToPlayers(){
@@ -151,22 +212,6 @@ const createGame = (name) => {
         canStart() {
             return this.players.length === 2 && this.board != null;
         },
-        getCurrentPlayer() {
-            return this.players[this.currentPosPlayer];
-        },
-        getNextPlayer() {
-            return this.players[this.incrementPos(this.currentPosPlayer)];
-        },
-        getIntrusPlayer() {
-            // console.log("get intrus player : ", this.players[this.intrusPosPlayer].name)
-            return this.players[this.intrusPosPlayer];
-        },
-        generateIntrus() {
-            min = Math.ceil(0);
-            max = Math.floor(this.players.length-1);
-            this.intrusPosPlayer = Math.floor(Math.random() * (max - min)) + min;
-            console.log("intrus pos : ", this.intrusPosPlayer)
-        },
         launch() {
             console.log('\nAll players are ready, the game is launched !!');
             console.log('\t\t', this.name, " started..!");
@@ -190,7 +235,9 @@ const createGame = (name) => {
                 console.log("Fin des mots");
                 console.log("\nDebut du jeu");
                 this.state = 4;
-                
+                return this.playUntilSomeoneWin();
+            }).then(resp => {
+                console.log("FIN DU JEU");
             })
             //distribuer les cartes
             //chaque joueur peut choisir une carte au voisin de droite (en voyant on jeu)

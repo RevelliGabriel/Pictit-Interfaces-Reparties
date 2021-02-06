@@ -38,6 +38,15 @@ const createPlayer = (socket, name) => {
                 });
             });
         },
+        notifyWord(word){
+            return new Promise((resolve, reject) => {
+                socket.emit('game-word', word);
+                socket.on('word-ok', (req) => {
+                    console.log("word emited sucess : ", req)
+                    resolve(req);
+                });
+            });
+        },
         notifyHand(){
             console.log("sending new hand to player", this.name)
             return new Promise((resolve, reject) => {
@@ -59,6 +68,15 @@ const createPlayer = (socket, name) => {
                 socket.on('card-trade', (cardId) => {
                     console.log("Player ", this.name, " trade card of next player ", nextPlayer.name, " : card ", cardId)
                     resolve(cardId);
+                });
+            })
+        },
+        askWord(){
+            return new Promise((resolve, reject) => {
+                socket.emit('ask-word')
+                socket.on('choose-word', (word) => {
+                    console.log("Player ", this.name, " choose the word : ", word)
+                    resolve(word);
                 });
             })
         }

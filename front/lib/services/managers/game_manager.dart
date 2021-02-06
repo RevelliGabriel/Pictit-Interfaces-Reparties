@@ -42,6 +42,15 @@ class GameManager implements Manager {
       _addStep(GameStepEnum.SWAPCARD);
     });
 
+    _socket.on('ask-word', (json) {
+      _addStep(GameStepEnum.WRITEWORD);
+    });
+
+    _socket.on('game-word', (data) {
+      print('get word from server: $data');
+      _socket.emit('word-ok', "ok");
+    });
+
     _socket.on('hand', (dynamic json) {
       me.addFromJsonCards(json['cards']);
       if (game.status != GameStepEnum.IDENTIFYING) {
@@ -55,7 +64,7 @@ class GameManager implements Manager {
     _socket.on('update-game', (dynamic json) {
       game.updateGameFromJson(json['game']);
       _gameUpdated.sink.add(true);
-    });
+    }); 
   }
 
   Future<bool> tradeCard(int id) async {
@@ -63,6 +72,19 @@ class GameManager implements Manager {
       _socket.emit(
         "card-trade",
         id,
+      );
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> chooseWord(String word) async {
+    try {
+      _socket.emit(
+        "choose-word",
+        word,
       );
       return true;
     } catch (e) {

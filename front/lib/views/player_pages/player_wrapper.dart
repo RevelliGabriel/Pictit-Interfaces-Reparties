@@ -13,6 +13,7 @@ class PlayerWrapper extends StatefulWidget {
 
 class _PlayerWrapperState extends State<PlayerWrapper> {
   GameManager gameManager = Global().fetch(GameManager);
+  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +57,28 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               children: [
                 Flexible(
                     flex: 1,
-                    child: Center(
-                        child: Text("alors c'est quoi ton mot ? hein ? oh !"))),
+                    child: Text("alors c'est quoi ton mot ? hein ? oh !")),
+                Flexible(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: TextField(
+                          controller: _controller,
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: RaisedButton(
+                            child: Text("Choose Word"),
+                            onPressed: () {
+                              gameManager.chooseWord(_controller.text);
+                            }),
+                      )
+                    ],
+                  ),
+                ),
                 Expanded(
                     child: ShowHand(
                   cards: gameManager.me.gameCards,

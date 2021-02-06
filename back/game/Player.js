@@ -37,6 +37,21 @@ const createPlayer = (socket, name) => {
                     resolve(req);
                 });
             });
+        }, 
+        notifyPlayerOut(player){
+            if (this.player.name == player.name){
+                socket.emit('self-player-out');
+            }
+            socket.emit('player-out', player);
+        },
+        notifyWord(word){
+            return new Promise((resolve, reject) => {
+                socket.emit('game-word', word);
+                socket.on('word-ok', (req) => {
+                    console.log("word emited sucess : ", req)
+                    resolve(req);
+                });
+            });
         },
         notifyHand(){
             console.log("sending new hand to player", this.name)
@@ -61,7 +76,35 @@ const createPlayer = (socket, name) => {
                     resolve(cardId);
                 });
             })
-        }
+        },
+        askWord(){
+            return new Promise((resolve, reject) => {
+                socket.emit('ask-word')
+                socket.on('choose-word', (word) => {
+                    console.log("Player ", this.name, " choose the word : ", word)
+                    resolve(word);
+                });
+            })
+        },
+        askCard(){
+            return new Promise((resolve, reject) => {
+                socket.emit('ask-card')
+                socket.on('choose-card', (card) => {
+                    console.log("Player ", this.name, " choose the card : ", card)
+                    resolve(card);
+                });
+            })
+        },
+        askVote(players){
+            return new Promise((resolve, reject) => {
+                var plys = players.map( elem => elem.name != this.name);
+                socket.emit('ask-vote', {players: players})
+                socket.on('choose-vote', (vote) => {
+                    console.log("Player ", this.name, " vote for : ", vote)
+                    resolve(vote);
+                });
+            })
+        },
     }
     return obj;
 }

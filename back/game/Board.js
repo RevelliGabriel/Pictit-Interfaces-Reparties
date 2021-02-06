@@ -11,7 +11,7 @@ const createBoard = (socket, name) => {
         // },
 
         notifyGameChange(game) {
-            socket.emit('update-game', { game : game})
+            socket.emit('update-game', {game : game})
         }
     }
 

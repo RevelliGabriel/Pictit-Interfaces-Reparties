@@ -21,7 +21,6 @@ module.exports = class Card {
     constructor(id) {
         this.id = id;
         this.path = assets[id];
-        console.log("\t\tgenerate card : ", this.path)
     }
 
 };

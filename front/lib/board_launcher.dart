@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:front/services/managers/connection_manager.dart';
 import 'package:front/services/managers/global.dart';
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (context) => Global(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Pictit Board',
         theme: InitialTheme().theme,
         home: MyHomePage(title: 'Flutter WEEEEEB'),
       ),
@@ -41,25 +43,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    connectionManager.connect();
+    lobbyManager.identify("board");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        child: BoardWrapper(),
-        onTap: () {
-          lobbyManager.identify("board");
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          connectionManager.connect();
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comm
+      body: BoardWrapper(),
     );
   }
 }

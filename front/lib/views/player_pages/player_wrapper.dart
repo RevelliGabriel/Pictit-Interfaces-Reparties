@@ -59,33 +59,41 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               children: [
                 Flexible(
                     flex: 1,
-                    child: Text("alors c'est quoi ton mot ? hein ? oh !")),
+                    child: Center(child: Text("Quel mot veux-tu choisir ?"))),
                 Flexible(
                   flex: 1,
                   child: Column(
                     children: [
                       Flexible(
                         flex: 1,
-                        child: TextField(
-                          controller: _controller,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: TextField(
+                              controller: _controller,
+                            ),
+                          ),
                         ),
                       ),
                       Flexible(
                         flex: 1,
-                        child: RaisedButton(
-                            child: Text("Choose Word"),
-                            onPressed: () {
-                              gameManager.chooseWord(_controller.text);
-                            }),
+                        child: Center(
+                          child: ElevatedButton(
+                              child: Text("Choose Word"),
+                              onPressed: () {
+                                gameManager.chooseWord(_controller.text);
+                              }),
+                        ),
                       )
                     ],
                   ),
                 ),
-                Expanded(
+                Flexible(
+                    flex: 2,
                     child: ShowHand(
-                  cards: gameManager.me.gameCards,
-                  disableSelection: true,
-                ))
+                      cards: gameManager.me.gameCards,
+                      disableSelection: true,
+                    ))
               ],
             );
           } else if (snapshot.data == GameStepEnum.TURNPLAY) {

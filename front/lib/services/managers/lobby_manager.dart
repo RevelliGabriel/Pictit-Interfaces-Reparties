@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/manager.dart';
@@ -47,6 +48,7 @@ class LobbyManager implements Manager {
           "timestamp": DateTime.now().millisecondsSinceEpoch,
         },
       );
+      sleep(Duration(seconds: 2));
       join();
       // initialisation du player
       _gameManager.me.name = name;
@@ -63,7 +65,6 @@ class LobbyManager implements Manager {
         "join",
         {"name": "SuperGame1"},
       );
-      
     } catch (e) {
       print(e.toString());
       return false;

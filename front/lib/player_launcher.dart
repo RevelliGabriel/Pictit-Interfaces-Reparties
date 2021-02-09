@@ -48,13 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PlayerMenu(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          connectionManager.toggleConnection();
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comm
     );
   }
 }

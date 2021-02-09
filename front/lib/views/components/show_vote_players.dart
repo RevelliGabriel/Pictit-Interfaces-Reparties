@@ -15,7 +15,9 @@ class ShowVotePlayers extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             child: Text(this.players.elementAt(index).name),
-            onTap: function(players.elementAt(index).name),
+            onTap: () {
+              function(players.elementAt(index).name);
+            },
           );
         });
   }

@@ -81,16 +81,18 @@ const createGame = (name) => {
         },
         getPlayerMaxVote(votes) {
             var max = 0;
-            var player = "";
+            var playerName = "";
             for (var name of votes) {
                 const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
                 var n = countOccurrences(votes, name);
                 if (max < n) {
                     max = n;
-                    player = name;
+                    playerName = name;
                 }
             }
-            return this.players.find(elem => elem.name = player);
+            let player = this.players.find(elem => elem.name = playerName);
+            console.log('Player out :', player)
+            return player;
         },
         notifyAllPlayers(topic) {
             if (topic == 'game-started') {
@@ -112,6 +114,8 @@ const createGame = (name) => {
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyPlayerOut(this.playerOut);
                 }
+                this.deletePlayer(this.playerOut);
+                this.playersOut.push(this.playerOut);
             }
             return true;
         },
@@ -163,12 +167,15 @@ const createGame = (name) => {
                 if (this.playerOut.position == this.intrusPosPlayer) {
                     // this.getIntrusPlayer().askLastWord();
                     // fin du jeu
+                    console.log("fin du jeu, l'intrus a été éliminé : ", this.getIntrusPlayer().name)
                     break;
                 } else if (this.players.length == 1) {
                     // un joueur a gagné
                     // fin du jeu
+                    console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
                     break;
                 }
+                console.log("nouveau tour")
                 // replay till players here
             }
         },
@@ -192,9 +199,7 @@ const createGame = (name) => {
                 // compute votes and determine player
                 // this.setNewWordToGame();
                 // this.getIndexPlayerMaxVote();
-                this.playerOut = this.getPlayerMaxVote();
-                this.deletePlayer(playerOut);
-                this.playersOut.push(this.playerOut);
+                this.playerOut = this.getPlayerMaxVote(votes);
                 return this.notifyAllPlayers('player-out');
             });
         },

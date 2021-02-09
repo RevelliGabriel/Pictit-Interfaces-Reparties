@@ -37,14 +37,14 @@ const createPlayer = (socket, name) => {
                     resolve(req);
                 });
             });
-        }, 
-        notifyPlayerOut(player){
-            if (this.player.name == player.name){
+        },
+        notifyPlayerOut(player) {
+            if (this.name == player.name) {
                 socket.emit('self-player-out');
             }
             socket.emit('player-out', player);
         },
-        notifyWord(word){
+        notifyWord(word) {
             return new Promise((resolve, reject) => {
                 socket.emit('game-word', word);
                 socket.on('word-ok', (req) => {
@@ -53,7 +53,7 @@ const createPlayer = (socket, name) => {
                 });
             });
         },
-        notifyHand(){
+        notifyHand() {
             console.log("sending new hand to player", this.name)
             return new Promise((resolve, reject) => {
                 socket.emit('hand', { cards: this.hand });
@@ -63,11 +63,11 @@ const createPlayer = (socket, name) => {
                 });
             });
         },
-        notifyGameLaunched(){
-            console.log("Sending to player", this.name, " position (", this.position,") and isIntrus(", this.isIntrus,")");
+        notifyGameLaunched() {
+            console.log("Sending to player", this.name, " position (", this.position, ") and isIntrus(", this.isIntrus, ")");
             socket.emit('game-started', { position: this.position, isIntrus: this.isIntrus });
         },
-        askTrade(nextPlayer){
+        askTrade(nextPlayer) {
             cards = nextPlayer.getHand();
             return new Promise((resolve, reject) => {
                 socket.emit('trade-cards', { cards: cards })
@@ -77,7 +77,7 @@ const createPlayer = (socket, name) => {
                 });
             })
         },
-        askWord(){
+        askWord() {
             return new Promise((resolve, reject) => {
                 socket.emit('ask-word')
                 socket.on('choose-word', (word) => {
@@ -86,7 +86,7 @@ const createPlayer = (socket, name) => {
                 });
             })
         },
-        askCard(){
+        askCard() {
             return new Promise((resolve, reject) => {
                 socket.emit('ask-card')
                 console.log("\t asked card to player", this.name)
@@ -96,10 +96,10 @@ const createPlayer = (socket, name) => {
                 });
             })
         },
-        askVote(players){
+        askVote(players) {
             return new Promise((resolve, reject) => {
-                var plys = players.map( elem => elem.name != this.name);
-                socket.emit('ask-vote', {players: players})
+                var plys = players.map(elem => elem.name != this.name);
+                socket.emit('ask-vote', { players: players })
                 socket.on('choose-vote', (vote) => {
                     console.log("Player ", this.name, " vote for : ", vote)
                     resolve(vote);

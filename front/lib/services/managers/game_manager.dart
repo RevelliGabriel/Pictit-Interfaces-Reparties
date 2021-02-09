@@ -22,7 +22,8 @@ class GameManager implements Manager {
 
   Stream<bool> get gameUpdatedStream => _gameUpdated.stream;
   Stream<GameStepEnum> get gameStepStream => _gameStepController.stream;
-  Stream<GamePlayerStateEnum> get gamePlayerStateStream => _gamePlayerStateStepController.stream;
+  Stream<GamePlayerStateEnum> get gamePlayerStateStream =>
+      _gamePlayerStateStepController.stream;
 
   void _addStep(GameStepEnum gameStep) {
     _gameStepController.sink.add(gameStep);
@@ -67,7 +68,6 @@ class GameManager implements Manager {
     });
 
     _socket.on('ask-card', (json) {
-
       print("C'est a vous de jouer");
       _addPlayerStep(GamePlayerStateEnum.PLAYING);
       _addStep(GameStepEnum.TURNPLAY);
@@ -134,6 +134,7 @@ class GameManager implements Manager {
         "choose-card",
         cardId,
       );
+      me.gameCards = me.gameCards.where((i) => i.id != cardId).toList();
       _addPlayerStep(GamePlayerStateEnum.WAITING);
       return true;
     } catch (e) {

@@ -97,52 +97,60 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               ],
             );
           } else if (snapshot.data == GameStepEnum.TURNPLAY) {
-            if (gameManager.me.state == GamePlayerStateEnum.WAITING) {
-              return Column(
-                children: [
-                  Flexible(flex: 1, child: Text("La partie est en cours")),
-                  Flexible(
-                      flex: 1,
-                      child: Text("Un autre joueur est en train de jouer")),
-                  Flexible(
-                      flex: 1,
-                      child: ShowHand(
-                        cards: gameManager.me.gameCards,
-                        disableSelection: true,
-                      )),
-                ],
-              );
-            } else if (gameManager.me.state == GamePlayerStateEnum.PLAYING) {
-              return Column(
-                children: [
-                  Flexible(flex: 1, child: Text("La partie est en cours")),
-                  Flexible(flex: 1, child: Text("A vous de jouer !")),
-                  Flexible(
-                      flex: 1,
-                      child: ShowHand(
-                        cards: gameManager.me.gameCards,
-                        function: (GameCard card) {
-                          gameManager.chooseCard(card.id);
-                        },
-                      )),
-                ],
-              );
-            }
+            return StreamBuilder<GamePlayerStateEnum>(
+                stream: gameManager.gamePlayerStateStream,
+                initialData: GamePlayerStateEnum.WAITING,
+                builder: (context, snapshot) {
+                  if (snapshot.data == GamePlayerStateEnum.PLAYING) {
+                    return Column(
+                      children: [
+                        Flexible(
+                            flex: 1, child: Text("La partie est en cours")),
+                        Flexible(flex: 1, child: Text("A vous de jouer !")),
+                        Flexible(
+                            flex: 1,
+                            child: ShowHand(
+                              cards: gameManager.me.gameCards,
+                              function: (GameCard card) {
+                                gameManager.chooseCard(card.id);
+                              },
+                            )),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        Flexible(
+                            flex: 1, child: Text("La partie est en cours")),
+                        Flexible(
+                            flex: 1,
+                            child:
+                                Text("Un autre joueur est en train de jouer")),
+                        Flexible(
+                            flex: 1,
+                            child: ShowHand(
+                              cards: gameManager.me.gameCards,
+                              disableSelection: true,
+                            )),
+                      ],
+                    );
+                  }
+                });
           } else if (snapshot.data == GameStepEnum.TURNVOTE) {
             return Column(
-                children: [
-                  Flexible(flex: 1, child: Text("C'est l'heure des votes")),
-                  Flexible(flex: 1, child: Text("Discutez, puis votez !")),
-                  Flexible(
-                      flex: 1,
-                      child: ShowVotePlayers(
-                        players: gameManager.players,
-                        function: (String name) {
-                          gameManager.chooseVote(name);
-                        },
-                      )),
-                ],
-              );
+              children: [
+                Flexible(flex: 1, child: Text("C'est l'heure des votes")),
+                Flexible(flex: 1, child: Text("Discutez, puis votez !")),
+                Flexible(
+                    flex: 1,
+                    child: ShowVotePlayers(
+                      players: gameManager.players,
+                      function: (String name) {
+                        gameManager.chooseVote(name);
+                      },
+                    )),
+              ],
+            );
           }
           return Container();
         });

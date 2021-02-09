@@ -13,20 +13,20 @@ const createGame = (name) => {
         words: [],
         word: "",
         players: [],
-        playersCards:[],
+        playersCards: [],
         playerOut: null,
-        playersOut:  [],
+        playersOut: [],
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
 
-        addBoard(board){
+        addBoard(board) {
             this.board = board
             //this.board.setGame(this)
         },
         addPlayer(player) {
             if (!this.hasPlayer(player)) {
                 this.players.push(player);
-                player.setPosition(this.players.length-1);
+                player.setPosition(this.players.length - 1);
                 //player.setGame(this);
                 //this.board.notifyPlayersList(this.players);
                 this.board.notifyGameChange(this)
@@ -48,11 +48,11 @@ const createGame = (name) => {
         },
         generateIntrus() {
             min = Math.ceil(0);
-            max = Math.floor(this.players.length-1);
+            max = Math.floor(this.players.length - 1);
             this.intrusPosPlayer = Math.floor(Math.random() * (max - min)) + min;
             console.log("intrus pos : ", this.intrusPosPlayer)
         },
-        notifyGameBoard(){
+        notifyGameBoard() {
             this.board.notify(this.players)
         },
         deletePlayer(player) {
@@ -79,10 +79,10 @@ const createGame = (name) => {
                 pos++;
             return pos
         },
-        getPlayerMaxVote(votes){
+        getPlayerMaxVote(votes) {
             var max = 0;
             var player = "";
-            for (var name of votes){
+            for (var name of votes) {
                 const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
                 var n = countOccurrences(votes, name);
                 if (max < n) {
@@ -92,22 +92,22 @@ const createGame = (name) => {
             }
             return this.players.find(elem => elem.name = player);
         },
-        notifyAllPlayers(topic){
-            if (topic == 'game-started'){
+        notifyAllPlayers(topic) {
+            if (topic == 'game-started') {
                 this.board.notifyGameChange(this);
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyGameLaunched();
                 }
-            } else if (topic == 'new-hands'){
+            } else if (topic == 'new-hands') {
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyHand();
                 }
-            } else if (topic == 'new-word'){
+            } else if (topic == 'new-word') {
                 this.board.notifyGameChange(this);
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyWord(this.word);
                 }
-            } else if (topic == 'player-out'){
+            } else if (topic == 'player-out') {
                 this.board.notifyGameChange(this);
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyPlayerOut(this.playerOut);
@@ -118,9 +118,9 @@ const createGame = (name) => {
         askTrades() {
             return this.getCurrentPlayer().askTrade(this.getNextPlayer()).then(cardId => {
                 var trade = {
-                    player : this.getCurrentPlayer(),
+                    player: this.getCurrentPlayer(),
                     playerToSteal: this.getNextPlayer(),
-                    cardToSteal : cardId,
+                    cardToSteal: cardId,
                 }
                 this.trades.push(trade);
             });
@@ -130,9 +130,9 @@ const createGame = (name) => {
         //         this.words.push(word);
         //     });
         // },
-        async tradeCardsOneByOne(){
+        async tradeCardsOneByOne() {
             // await this.forwardBeginTrade();
-            while(true) {
+            while (true) {
                 await this.askTrades();
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
                 if (this.currentPosPlayer === 0)
@@ -141,7 +141,7 @@ const createGame = (name) => {
             this.setNewCardsToPlayers();
             return this.notifyAllPlayers('new-hands');
         },
-        async chooseWord(){
+        async chooseWord() {
             // await this.forwardBeginCall();
             // while(true) {
             //     await this.askWord();
@@ -149,22 +149,22 @@ const createGame = (name) => {
             //     if (this.currentPosPlayer === 0)
             //         break;
             // }
-            Promise.all(this.players.map(player => player.askWord())).then((values) => {
+            return Promise.all(this.players.map(player => player.askWord())).then((values) => {
                 this.words = values;
                 console.log("Players words : ", this.words)
                 this.setNewWordToGame();
                 return this.notifyAllPlayers('new-word');
             });
         },
-        async playUntilSomeoneWin(){
-            while(true){
+        async playUntilSomeoneWin() {
+            while (true) {
                 // playturn
                 await this.playOneTrun();
-                if (this.playerOut.position == this.intrusPosPlayer){
+                if (this.playerOut.position == this.intrusPosPlayer) {
                     // this.getIntrusPlayer().askLastWord();
                     // fin du jeu
                     break;
-                } else if (this.players.length == 1){
+                } else if (this.players.length == 1) {
                     // un joueur a gagné
                     // fin du jeu
                     break;
@@ -172,8 +172,9 @@ const createGame = (name) => {
                 // replay till players here
             }
         },
-        async playOneTrun(){
+        async playOneTrun() {
             for (let player of this.players) {
+                console.log("\ndebut du tour de", player.name)
                 let cardId = await player.askCard();
                 let card = player.hand.find(elem => elem.id == cardId)
                 player.hand = player.hand.filter(card => card.id != cardId)
@@ -181,11 +182,12 @@ const createGame = (name) => {
                 player.notifyHand();
                 this.board.notifyGameChange(this);
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
+                console.log("fin du tour de", player.name)
             }
             return this.askVotes();
         },
-        askVotes(){
-            Promise.all(this.players.map(player => player.askVote(this.players))).then((votes) => {
+        askVotes() {
+            return Promise.all(this.players.map(player => player.askVote(this.players))).then((votes) => {
                 console.log("Players votes : ", votes)
                 // compute votes and determine player
                 // this.setNewWordToGame();
@@ -196,8 +198,8 @@ const createGame = (name) => {
                 return this.notifyAllPlayers('player-out');
             });
         },
-        setNewCardsToPlayers(){
-            for(let trade of this.trades){
+        setNewCardsToPlayers() {
+            for (let trade of this.trades) {
                 _player = trade.player;
                 _otherPlayer = trade.playerToSteal;
                 cardId = trade.cardToSteal
@@ -205,15 +207,15 @@ const createGame = (name) => {
                 console.log(_player.name, " : ", _player.hand)
                 console.log(_otherPlayer.name, " : ", _otherPlayer.hand)
                 _player.hand.push(new Card(trade.cardToSteal))
-                _otherPlayer.hand = _otherPlayer.hand.filter(card => {return card.id != cardId})
+                _otherPlayer.hand = _otherPlayer.hand.filter(card => { return card.id != cardId })
                 console.log('New cards for players : ')
                 console.log(_player.name, " : ", _player.hand)
                 console.log(_otherPlayer.name, " : ", _otherPlayer.hand)
             }
         },
-        setNewWordToGame(){
+        setNewWordToGame() {
             min = Math.ceil(0);
-            max = Math.floor(this.words.length-1);
+            max = Math.floor(this.words.length - 1);
             this.word = this.words[Math.floor(Math.random() * (max - min)) + min];
         },
         distribute() {

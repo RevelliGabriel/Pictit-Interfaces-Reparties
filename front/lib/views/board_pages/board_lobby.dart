@@ -15,8 +15,6 @@ class _BoardLobbyState extends State<BoardLobby> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Size.infinite.width,
-      height: Size.infinite.height,
       child: StreamBuilder<bool>(
         stream: gameManager.gameUpdatedStream,
         initialData: false,
@@ -26,7 +24,7 @@ class _BoardLobbyState extends State<BoardLobby> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ShowPlayers(players: gameManager.game.players),
+                // ShowPlayers(players: gameManager.game.players),
                 SizedBox(
                   height: 50,
                 ),

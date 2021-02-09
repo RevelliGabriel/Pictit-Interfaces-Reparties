@@ -89,6 +89,7 @@ const createPlayer = (socket, name) => {
         askCard(){
             return new Promise((resolve, reject) => {
                 socket.emit('ask-card')
+                console.log("\t asked card to player", this.name)
                 socket.on('choose-card', (cardId) => {
                     console.log("Player ", this.name, " choose the card : ", cardId)
                     resolve(cardId);

@@ -15,11 +15,12 @@ class Player {
   }
 
   Player.fromJson(dynamic jsonPlayer) {
+    this.gameCards = [];
     this.name = jsonPlayer['name'] as String;
     for (dynamic jsonGameCard in jsonPlayer['hand']) {
       this.gameCards.add(GameCard.fromJson(jsonGameCard));
     }
-    this.isIntrus = false;
+    this.isIntrus = jsonPlayer['isIntrus'];
   }
 
   void addFromJsonCards(dynamic jsonCards) {

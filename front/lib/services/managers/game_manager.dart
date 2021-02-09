@@ -16,14 +16,22 @@ class GameManager implements Manager {
   Socket _socket;
   StreamController<GameStepEnum> _gameStepController =
       StreamController.broadcast();
+  StreamController<GamePlayerStateEnum> _gamePlayerStateStepController =
+      StreamController.broadcast();
   StreamController<bool> _gameUpdated = StreamController.broadcast();
 
   Stream<bool> get gameUpdatedStream => _gameUpdated.stream;
   Stream<GameStepEnum> get gameStepStream => _gameStepController.stream;
+  Stream<GamePlayerStateEnum> get gamePlayerStateStream => _gamePlayerStateStepController.stream;
 
   void _addStep(GameStepEnum gameStep) {
     _gameStepController.sink.add(gameStep);
     game.status = gameStep;
+  }
+
+  void _addPlayerStep(GamePlayerStateEnum playerStep) {
+    _gamePlayerStateStepController.sink.add(playerStep);
+    me.state = playerStep;
   }
 
   GameManager(Socket socket) {
@@ -37,6 +45,7 @@ class GameManager implements Manager {
 
     _socket.on('game-started', (dynamic json) {
       me.addFromJsonIsIntru(json['isIntru']);
+      _addStep(GameStepEnum.DISTRIBUTION);
       print("game started babys");
     });
 
@@ -53,29 +62,27 @@ class GameManager implements Manager {
       print('get word from server: $data');
       word = data;
       _socket.emit('word-ok', "ok");
-      me.state = GamePlayerStateEnum.WAITING;
+      _addPlayerStep(GamePlayerStateEnum.WAITING);
       _addStep(GameStepEnum.TURNPLAY);
     });
 
     _socket.on('ask-card', (json) {
-      other.addFromJsonCards(json['cards']);
-      me.state = GamePlayerStateEnum.PLAYING;
+
+      print("C'est a vous de jouer");
+      _addPlayerStep(GamePlayerStateEnum.PLAYING);
       _addStep(GameStepEnum.TURNPLAY);
     });
 
     _socket.on('ask-vote', (json) {
       // json['players'] assign to var
+      print("Time to vote");
       this.updatePlayers(json);
       _addStep(GameStepEnum.TURNVOTE);
     });
 
     _socket.on('hand', (dynamic json) {
       me.addFromJsonCards(json['cards']);
-      if (game.status != GameStepEnum.IDENTIFYING) {
-        _addStep(GameStepEnum.WRITEWORD);
-      } else {
-        _addStep(GameStepEnum.DISTRIBUTION);
-      }
+      print("Ma nouvelle main");
       print(me.gameCards.toString());
     });
 
@@ -127,6 +134,7 @@ class GameManager implements Manager {
         "choose-card",
         cardId,
       );
+      _addPlayerStep(GamePlayerStateEnum.WAITING);
       return true;
     } catch (e) {
       print(e.toString());
@@ -147,18 +155,20 @@ class GameManager implements Manager {
     }
   }
 
-
-  void updatePlayers(dynamic json){
+  void updatePlayers(dynamic json) {
+    print("Trying to update players");
     this.players = [];
     for (dynamic jsonPlayer in json['players']) {
       this.players.add(Player.fromJson(jsonPlayer));
     }
+    print("Players updated");
   }
 
   @override
   void dispose() {
     _gameUpdated.close();
     _gameStepController.close();
+    _gamePlayerStateStepController.close();
     // TODO: implement dispose
   }
 }

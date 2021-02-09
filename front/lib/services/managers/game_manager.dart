@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/manager.dart';
 import 'package:front/services/models/game.dart';
@@ -10,6 +11,8 @@ class GameManager implements Manager {
   Game game;
   Player other;
   Player me;
+  List<Player> players;
+  String word;
   Socket _socket;
   StreamController<GameStepEnum> _gameStepController =
       StreamController.broadcast();
@@ -48,7 +51,22 @@ class GameManager implements Manager {
 
     _socket.on('game-word', (data) {
       print('get word from server: $data');
+      word = data;
       _socket.emit('word-ok', "ok");
+      me.state = GamePlayerStateEnum.WAITING;
+      _addStep(GameStepEnum.TURNPLAY);
+    });
+
+    _socket.on('ask-card', (json) {
+      other.addFromJsonCards(json['cards']);
+      me.state = GamePlayerStateEnum.PLAYING;
+      _addStep(GameStepEnum.TURNPLAY);
+    });
+
+    _socket.on('ask-vote', (json) {
+      // json['players'] assign to var
+      this.updatePlayers(json);
+      _addStep(GameStepEnum.TURNVOTE);
     });
 
     _socket.on('hand', (dynamic json) {
@@ -61,10 +79,20 @@ class GameManager implements Manager {
       print(me.gameCards.toString());
     });
 
+    _socket.on('self-player-out', (data) {
+      _addStep(GameStepEnum.ELIMINATED);
+    });
+
+    _socket.on('player-out', (player) {
+      print("un joueur a été éliminé");
+      _addStep(GameStepEnum.TURNPLAY);
+      me.state = GamePlayerStateEnum.WAITING;
+    });
+
     _socket.on('update-game', (dynamic json) {
       game.updateGameFromJson(json['game']);
       _gameUpdated.sink.add(true);
-    }); 
+    });
   }
 
   Future<bool> tradeCard(int id) async {
@@ -90,6 +118,40 @@ class GameManager implements Manager {
     } catch (e) {
       print(e.toString());
       return false;
+    }
+  }
+
+  Future<bool> chooseCard(int cardId) async {
+    try {
+      _socket.emit(
+        "choose-card",
+        cardId,
+      );
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> chooseVote(String name) async {
+    try {
+      _socket.emit(
+        "choose-vote",
+        name,
+      );
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+
+  void updatePlayers(dynamic json){
+    this.players = [];
+    for (dynamic jsonPlayer in json['players']) {
+      this.players.add(Player.fromJson(jsonPlayer));
     }
   }
 

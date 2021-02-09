@@ -79,6 +79,19 @@ const createGame = (name) => {
                 pos++;
             return pos
         },
+        getPlayerMaxVote(votes){
+            var max = 0;
+            var player = "";
+            for (var name of votes){
+                const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+                var n = countOccurrences(votes, name);
+                if (max < n) {
+                    max = n;
+                    player = name;
+                }
+            }
+            return this.players.find(elem => elem.name = player);
+        },
         notifyAllPlayers(topic){
             if (topic == 'game-started'){
                 this.board.notifyGameChange(this);
@@ -161,8 +174,11 @@ const createGame = (name) => {
         },
         async playOneTrun(){
             for (let player of this.players) {
-                let card = await player.askCard();
+                let cardId = await player.askCard();
+                let card = player.hand.find(elem => elem.id == cardId)
+                player.hand = player.hand.filter(card => card.id != cardId)
                 this.playersCards[this.currentPosPlayer] = card;
+                player.notifyHand();
                 this.board.notifyGameChange(this);
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
             }
@@ -173,8 +189,8 @@ const createGame = (name) => {
                 console.log("Players votes : ", votes)
                 // compute votes and determine player
                 // this.setNewWordToGame();
-                let indexPlayerOut = 0;
-                this.playerOut = this.players[indexPlayerOut];
+                // this.getIndexPlayerMaxVote();
+                this.playerOut = this.getPlayerMaxVote();
                 this.deletePlayer(playerOut);
                 this.playersOut.push(this.playerOut);
                 return this.notifyAllPlayers('player-out');

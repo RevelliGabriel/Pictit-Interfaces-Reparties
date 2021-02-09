@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/card.dart';
 import 'package:front/views/components/show_hand.dart';
+import 'package:front/views/components/show_vote_players.dart';
 import 'package:front/views/player_pages/player_identify.dart';
 
 class PlayerWrapper extends StatefulWidget {
@@ -86,6 +88,53 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
                 ))
               ],
             );
+          } else if (snapshot.data == GameStepEnum.TURNPLAY) {
+            if (gameManager.me.state == GamePlayerStateEnum.WAITING) {
+              return Column(
+                children: [
+                  Flexible(flex: 1, child: Text("La partie est en cours")),
+                  Flexible(
+                      flex: 1,
+                      child: Text("Un autre joueur est en train de jouer")),
+                  Flexible(
+                      flex: 1,
+                      child: ShowHand(
+                        cards: gameManager.me.gameCards,
+                        disableSelection: true,
+                      )),
+                ],
+              );
+            } else if (gameManager.me.state == GamePlayerStateEnum.PLAYING) {
+              return Column(
+                children: [
+                  Flexible(flex: 1, child: Text("La partie est en cours")),
+                  Flexible(flex: 1, child: Text("A vous de jouer !")),
+                  Flexible(
+                      flex: 1,
+                      child: ShowHand(
+                        cards: gameManager.me.gameCards,
+                        function: (GameCard card) {
+                          gameManager.chooseCard(card.id);
+                        },
+                      )),
+                ],
+              );
+            }
+          } else if (snapshot.data == GameStepEnum.TURNVOTE) {
+            return Column(
+                children: [
+                  Flexible(flex: 1, child: Text("C'est l'heure des votes")),
+                  Flexible(flex: 1, child: Text("Discutez, puis votez !")),
+                  Flexible(
+                      flex: 1,
+                      child: ShowVotePlayers(
+                        players: gameManager.players,
+                        function: (String name) {
+                          gameManager.chooseVote(name);
+                        },
+                      )),
+                ],
+              );
           }
           return Container();
         });

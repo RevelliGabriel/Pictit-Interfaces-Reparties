@@ -4,5 +4,6 @@ enum GameStepEnum {
   SWAPCARD,
   WRITEWORD,
   TURNPLAY,
-  TURNVOTE
+  TURNVOTE,
+  ELIMINATED
 }

@@ -4,9 +4,13 @@ import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/card.dart';
+import 'package:front/views/components/loading.dart';
 import 'package:front/views/components/show_hand.dart';
 import 'package:front/views/components/show_vote_players.dart';
 import 'package:front/views/player_pages/player_identify.dart';
+import 'package:front/views/player_pages/player_turn_play.dart';
+import 'package:front/views/player_pages/player_turn_vote.dart';
+import 'package:front/views/player_pages/player_word.dart';
 
 class PlayerWrapper extends StatefulWidget {
   @override
@@ -14,8 +18,8 @@ class PlayerWrapper extends StatefulWidget {
 }
 
 class _PlayerWrapperState extends State<PlayerWrapper> {
+  bool wordOk = false;
   GameManager gameManager = Global().fetch(GameManager);
-  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +31,12 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             return PlayerIdentify();
           } else if (snapshot.data == GameStepEnum.DISTRIBUTION) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Flexible(
                     flex: 1,
-                    child:
-                        Text("En attente de la sélection des autres joueurs")),
+                    child: Text(
+                        "En attente de l'échange de cartes entre deux joueurs")),
                 Flexible(
                     flex: 1,
                     child: ShowHand(
@@ -55,102 +60,32 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               ],
             );
           } else if (snapshot.data == GameStepEnum.WRITEWORD) {
-            return Column(
-              children: [
-                Flexible(
-                    flex: 1,
-                    child: Center(child: Text("Quel mot veux-tu choisir ?"))),
-                Flexible(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 30, right: 30),
-                            child: TextField(
-                              controller: _controller,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Center(
-                          child: ElevatedButton(
-                              child: Text("Choose Word"),
-                              onPressed: () {
-                                gameManager.chooseWord(_controller.text);
-                              }),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Flexible(
-                    flex: 2,
-                    child: ShowHand(
-                      cards: gameManager.me.gameCards,
-                      disableSelection: true,
-                    ))
-              ],
-            );
+            return PlayerWord();
           } else if (snapshot.data == GameStepEnum.TURNPLAY) {
-            return StreamBuilder<GamePlayerStateEnum>(
-                stream: gameManager.gamePlayerStateStream,
-                initialData: GamePlayerStateEnum.WAITING,
-                builder: (context, snapshot) {
-                  if (snapshot.data == GamePlayerStateEnum.PLAYING) {
-                    return Column(
-                      children: [
-                        Flexible(
-                            flex: 1, child: Text("La partie est en cours")),
-                        Flexible(flex: 1, child: Text("A vous de jouer !")),
-                        Flexible(
-                            flex: 1,
-                            child: ShowHand(
-                              cards: gameManager.me.gameCards,
-                              function: (GameCard card) {
-                                gameManager.chooseCard(card.id);
-                              },
-                            )),
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      children: [
-                        Flexible(
-                            flex: 1, child: Text("La partie est en cours")),
-                        Flexible(
-                            flex: 1,
-                            child:
-                                Text("Un autre joueur est en train de jouer")),
-                        Flexible(
-                            flex: 1,
-                            child: ShowHand(
-                              cards: gameManager.me.gameCards,
-                              disableSelection: true,
-                            )),
-                      ],
-                    );
-                  }
-                });
+            if (!wordOk) {
+              return Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(gameManager.me.isIntrus
+                        ? "Tu es l'intrus, ne te fais pas trouver !"
+                        : "le mot est : " + gameManager.word),
+                    ElevatedButton(
+                        onPressed: () {
+                          gameManager.wordOk();
+                          setState(() {
+                            wordOk = true;
+                          });
+                        },
+                        child: Text("Oui ! j'ai compris"))
+                  ],
+                ),
+              );
+            }
+            return PlayerTurnPlay();
           } else if (snapshot.data == GameStepEnum.TURNVOTE) {
-            return Column(
-              children: [
-                Flexible(flex: 1, child: Text("C'est l'heure des votes")),
-                Flexible(flex: 1, child: Text("Discutez, puis votez !")),
-                Flexible(
-                    flex: 1,
-                    child: ShowVotePlayers(
-                      players: gameManager.players,
-                      function: (String name) {
-                        gameManager.chooseVote(name);
-                      },
-                    )),
-              ],
-            );
+            return PlayerTurnVote();
           }
           return Container();
         });

@@ -106,9 +106,10 @@ const createGame = (name) => {
                 }
             } else if (topic == 'new-word') {
                 this.board.notifyGameChange(this);
-                for (let i = 0; i < this.players.length; ++i) {
-                    this.players[i].notifyWord(this.word);
-                }
+                return Promise.all(this.players.map(player => player.notifyWord(this.word)));
+                // for (let i = 0; i < this.players.length; ++i) {
+                //     this.players[i].notifyWord(this.word);
+                // }
             } else if (topic == 'player-out') {
                 this.board.notifyGameChange(this);
                 for (let i = 0; i < this.players.length; ++i) {
@@ -164,16 +165,21 @@ const createGame = (name) => {
             while (true) {
                 // playturn
                 await this.playOneTrun();
-                if (this.playerOut.position == this.intrusPosPlayer) {
+                if (this.playerOut.isIntrus) {
                     // this.getIntrusPlayer().askLastWord();
                     // fin du jeu
-                    console.log("fin du jeu, l'intrus a été éliminé : ", this.getIntrusPlayer().name)
+                    console.log("fin du jeu, l'intrus a été éliminé : ", this.playerOut.name)
                     break;
                 } else if (this.players.length == 1) {
                     // un joueur a gagné
                     // fin du jeu
                     console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
                     break;
+                }
+                else{
+                    if (this.intrusPosPlayer > this.playerOut.position){
+                        this.intrusPosPlayer--;
+                    } 
                 }
                 console.log("nouveau tour")
                 this.state = 4;
@@ -245,10 +251,10 @@ const createGame = (name) => {
             this.generateIntrus();
             this.getIntrusPlayer().setIntrus();
             console.log("L'intrus est : ", this.getIntrusPlayer().name);
-            this.state = 1;
-            this.notifyAllPlayers('game-started');
             console.log("\nDebut de la distribution");
             return this.distribute().then(resp => {
+                this.state = 1;
+                this.notifyAllPlayers('game-started');
                 console.log("Fin de la distribution");
                 console.log("\nDebut des trades");
                 this.state = 2;

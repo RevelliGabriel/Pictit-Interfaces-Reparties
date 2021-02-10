@@ -32,18 +32,22 @@ class _PlayerMenuState extends State<PlayerMenu> {
           if (snapshot.data == ConnectionStateEnum.CONNECTED) {
             return PlayerWrapper();
           }
-          return Container(
-            child: Column(
-              children: [
-                Flexible(flex: 1, child: Container()),
-                Flexible(
-                    flex: 2,
-                    child: ElevatedButton(
-                        child: Text("Jouer"),
-                        onPressed: () {
-                          connectionManager.connect();
-                        })),
-              ],
+          return Center(
+            child: Container(
+              child: Column(
+                children: [
+                  Flexible(
+                      flex: 1,
+                      child: Image.asset("assets/images/CardBack.jpg")),
+                  Flexible(
+                      flex: 2,
+                      child: ElevatedButton(
+                          child: Text("Jouer"),
+                          onPressed: () {
+                            connectionManager.connect();
+                          })),
+                ],
+              ),
             ),
           );
         });

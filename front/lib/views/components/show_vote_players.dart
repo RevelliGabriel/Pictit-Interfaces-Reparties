@@ -10,14 +10,17 @@ class ShowVotePlayers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
         itemCount: this.players.length,
         itemBuilder: (context, index) {
-          return GestureDetector(
-            child: Text(this.players.elementAt(index).name),
-            onTap: () {
-              function(players.elementAt(index).name);
-            },
+          return Container(
+            margin: EdgeInsets.only(bottom: 20),
+            child: ElevatedButton(
+              onPressed: () {
+                function(players.elementAt(index).name);
+              },
+              child: Text(this.players.elementAt(index).name),
+            ),
           );
         });
   }

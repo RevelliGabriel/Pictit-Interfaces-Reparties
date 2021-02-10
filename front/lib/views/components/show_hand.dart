@@ -8,12 +8,14 @@ class ShowHand extends StatefulWidget {
   final Function function;
   int selectedCardId;
   final bool disableSelection;
+  final bool faceDown;
 
   ShowHand(
-      {this.cards,
+      {@required this.cards,
       this.function,
       this.selectedCardId,
-      this.disableSelection = false});
+      this.disableSelection = false,
+      this.faceDown = false});
 
   @override
   _ShowHandState createState() => _ShowHandState();
@@ -45,6 +47,7 @@ class _ShowHandState extends State<ShowHand> {
                     card: card,
                     selected: widget.selectedCardId == card.id,
                     ratio: 1.5,
+                    faceDown: widget.faceDown,
                   ),
                 )),
           );

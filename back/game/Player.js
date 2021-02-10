@@ -46,10 +46,10 @@ const createPlayer = (socket, name) => {
         },
         notifyWord(word) {
             return new Promise((resolve, reject) => {
-                if(this.isIntrus){
+                if (this.isIntrus) {
                     socket.emit('game-word', null)
                 }
-                else{
+                else {
                     socket.emit('game-word', word);
                 }
                 socket.on('word-ok', (req) => {
@@ -71,6 +71,9 @@ const createPlayer = (socket, name) => {
         notifyGameLaunched() {
             console.log("Sending to player", this.name, " position (", this.position, ") and isIntrus(", this.isIntrus, ")");
             socket.emit('game-started', { position: this.position, isIntrus: this.isIntrus });
+        },
+        notifyGameStopped() {
+            socket.emit('game-ended');
         },
         askTrade(nextPlayer) {
             cards = nextPlayer.getHand();

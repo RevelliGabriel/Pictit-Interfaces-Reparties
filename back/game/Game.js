@@ -100,6 +100,11 @@ const createGame = (name) => {
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyGameLaunched();
                 }
+            } else if (topic == 'game-ended') {
+                this.board.notifyGameChange(this);
+                for (let i = 0; i < this.players.length; ++i) {
+                    this.players[i].notifyGameStopped();
+                }
             } else if (topic == 'new-hands') {
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyHand();
@@ -271,6 +276,7 @@ const createGame = (name) => {
                 return this.playUntilSomeoneWin();
             }).then(resp => {
                 this.state = 6;
+                this.notifyAllPlayers('game-ended');
                 this.board.notifyGameChange(this);
                 console.log("FIN DU JEU");
             })

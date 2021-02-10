@@ -9,6 +9,7 @@ import 'package:front/views/components/show_hand.dart';
 import 'package:front/views/components/show_vote_players.dart';
 import 'package:front/views/player_pages/player_identify.dart';
 import 'package:front/views/player_pages/player_turn_play.dart';
+import 'package:front/views/player_pages/player_turn_vote.dart';
 import 'package:front/views/player_pages/player_word.dart';
 
 class PlayerWrapper extends StatefulWidget {
@@ -84,20 +85,7 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             }
             return PlayerTurnPlay();
           } else if (snapshot.data == GameStepEnum.TURNVOTE) {
-            return Column(
-              children: [
-                Flexible(flex: 1, child: Text("C'est l'heure des votes")),
-                Flexible(flex: 1, child: Text("Discutez, puis votez !")),
-                Flexible(
-                    flex: 1,
-                    child: ShowVotePlayers(
-                      players: gameManager.players,
-                      function: (String name) {
-                        gameManager.chooseVote(name);
-                      },
-                    )),
-              ],
-            );
+            return PlayerTurnVote();
           }
           return Container();
         });

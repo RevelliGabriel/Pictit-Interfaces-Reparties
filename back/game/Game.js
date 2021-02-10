@@ -165,16 +165,21 @@ const createGame = (name) => {
             while (true) {
                 // playturn
                 await this.playOneTrun();
-                if (this.playerOut.position == this.intrusPosPlayer) {
+                if (this.playerOut.isIntrus) {
                     // this.getIntrusPlayer().askLastWord();
                     // fin du jeu
-                    console.log("fin du jeu, l'intrus a été éliminé : ", this.getIntrusPlayer().name)
+                    console.log("fin du jeu, l'intrus a été éliminé : ", this.playerOut.name)
                     break;
                 } else if (this.players.length == 1) {
                     // un joueur a gagné
                     // fin du jeu
                     console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
                     break;
+                }
+                else{
+                    if (this.intrusPosPlayer > this.playerOut.position){
+                        this.intrusPosPlayer--;
+                    } 
                 }
                 console.log("nouveau tour")
                 // replay till players here

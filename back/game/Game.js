@@ -176,6 +176,8 @@ const createGame = (name) => {
                     break;
                 }
                 console.log("nouveau tour")
+                this.state = 4;
+                this.board.notifyGameChange(this);
                 // replay till players here
             }
         },
@@ -191,6 +193,8 @@ const createGame = (name) => {
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
                 console.log("fin du tour de", player.name)
             }
+            this.state = 5;
+            this.board.notifyGameChange(this);
             return this.askVotes();
         },
         askVotes() {
@@ -260,6 +264,8 @@ const createGame = (name) => {
                 this.state = 4;
                 return this.playUntilSomeoneWin();
             }).then(resp => {
+                this.state = 6;
+                this.board.notifyGameChange(this);
                 console.log("FIN DU JEU");
             })
             //distribuer les cartes

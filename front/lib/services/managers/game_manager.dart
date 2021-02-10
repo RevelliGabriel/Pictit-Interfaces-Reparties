@@ -62,7 +62,7 @@ class GameManager implements Manager {
     _socket.on('game-word', (data) {
       print('get word from server: $data');
       word = data;
-      _socket.emit('word-ok', "ok");
+      me.isIntrus = data == null;
       _addPlayerStep(GamePlayerStateEnum.WAITING);
       _addStep(GameStepEnum.TURNPLAY);
     });
@@ -98,6 +98,7 @@ class GameManager implements Manager {
 
     _socket.on('update-game', (dynamic json) {
       game.updateGameFromJson(json['game']);
+      _addStep(game.status);
       _gameUpdated.sink.add(true);
     });
   }
@@ -108,6 +109,16 @@ class GameManager implements Manager {
         "card-trade",
         id,
       );
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> wordOk() async {
+    try {
+      _socket.emit('word-ok', "ok");
       return true;
     } catch (e) {
       print(e.toString());

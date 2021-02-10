@@ -46,7 +46,12 @@ const createPlayer = (socket, name) => {
         },
         notifyWord(word) {
             return new Promise((resolve, reject) => {
-                socket.emit('game-word', word);
+                if(this.isIntrus){
+                    socket.emit('game-word', null)
+                }
+                else{
+                    socket.emit('game-word', word);
+                }
                 socket.on('word-ok', (req) => {
                     console.log("word emited sucess : ", req)
                     resolve(req);
@@ -98,7 +103,7 @@ const createPlayer = (socket, name) => {
         },
         askVote(players) {
             return new Promise((resolve, reject) => {
-                var plys = players.map(elem => elem.name != this.name);
+                //var plys = players.map(elem => elem.name != this.name);
                 socket.emit('ask-vote', { players: players })
                 socket.on('choose-vote', (vote) => {
                     console.log("Player ", this.name, " vote for : ", vote)

@@ -27,6 +27,7 @@ class Game {
       this.players.add(Player.fromJson(jsonPlayer));
     }
     this.name = json['name'];
+    this.status = GameStepEnum.values.elementAt(json['state']);
     this.players.elementAt(json['intrusPosPlayer'] as int).isIntrus = true;
     setPlayerPlaying(json['currentPosPlayer'] as int);
   }

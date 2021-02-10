@@ -87,7 +87,8 @@ class GameManager implements Manager {
     });
 
     _socket.on('self-player-out', (data) {
-      _addStep(GameStepEnum.ELIMINATED);
+      // TODO: add condition if game not finish to return in the turnplay state
+      _addStep(GameStepEnum.ENDGAME);
     });
 
     _socket.on('player-out', (player) {

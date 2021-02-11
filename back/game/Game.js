@@ -195,6 +195,7 @@ const createGame = (name) => {
         async playOneTrun() {
             for (let player of this.players) {
                 console.log("\ndebut du tour de", player.name)
+                this.board.notifyGameChange(this);
                 let cardId = await player.askCard();
                 let card = player.hand.find(elem => elem.id == cardId)
                 player.hand = player.hand.filter(card => card.id != cardId)

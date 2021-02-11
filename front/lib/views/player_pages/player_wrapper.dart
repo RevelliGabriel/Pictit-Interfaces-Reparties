@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/card.dart';
-import 'package:front/views/components/loading.dart';
 import 'package:front/views/components/show_hand.dart';
-import 'package:front/views/components/show_vote_players.dart';
+import 'package:front/views/player_pages/player_end_game.dart';
 import 'package:front/views/player_pages/player_identify.dart';
 import 'package:front/views/player_pages/player_turn_play.dart';
 import 'package:front/views/player_pages/player_turn_vote.dart';
@@ -31,8 +29,9 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             return PlayerIdentify();
           } else if (snapshot.data == GameStepEnum.DISTRIBUTION) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Flexible(flex: 1, child: Container()),
                 Flexible(
                     flex: 1,
                     child: Text(
@@ -47,6 +46,7 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             );
           } else if (snapshot.data == GameStepEnum.SWAPCARD) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                     flex: 1,
@@ -56,7 +56,16 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
                           gameManager.tradeCard(card.id);
                         })),
                 Flexible(
-                    flex: 1, child: ShowHand(cards: gameManager.me.gameCards))
+                  flex: 1,
+                  child: Text(
+                      "Veuillez choisir une carte dans la mains de l'adversaire"),
+                ),
+                Flexible(
+                    flex: 1,
+                    child: ShowHand(
+                      cards: gameManager.me.gameCards,
+                      disableSelection: true,
+                    ))
               ],
             );
           } else if (snapshot.data == GameStepEnum.WRITEWORD) {
@@ -86,6 +95,8 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             return PlayerTurnPlay();
           } else if (snapshot.data == GameStepEnum.TURNVOTE) {
             return PlayerTurnVote();
+          } else if (snapshot.data == GameStepEnum.ENDGAME) {
+            return PlayerEndGame();
           }
           return Container();
         });

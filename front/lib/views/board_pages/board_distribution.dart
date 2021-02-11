@@ -1,51 +1,150 @@
 import 'package:flutter/material.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
+import 'package:front/services/models/game.dart';
+import 'package:front/services/models/player.dart';
 import 'package:front/views/components/show_hand.dart';
 
 class BoardDistribution extends StatefulWidget {
+  final Game game;
+
+  BoardDistribution({@required this.game});
+
   @override
   _BoardDistributionState createState() => _BoardDistributionState();
 }
 
 class _BoardDistributionState extends State<BoardDistribution> {
-  GameManager gameManager = Global().fetch(GameManager);
+  //GameManager gameManager = Global().fetch(GameManager);
+  double height;
+  double width;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-              width: MediaQuery.of(context).size.width * 0.3,
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Center(
-                child: ShowHand(
-                  cards: gameManager.game.players[0].gameCards,
-                  disableSelection: true,
-                  faceDown: true,
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      getStackPlayer1(context),
+      Expanded(child: Container(color: Colors.yellow,)),
+      getStackPlayer0(context),
+    ]);
+  }
+
+  Widget getStackPlayer1(BuildContext context) {
+    double widthStack = width * 0.5;
+    double heightStack = height * 0.3;
+    Player player = widget.game.players[1];
+    return Container(
+      alignment: Alignment.topCenter,
+      width: widthStack,
+      height: heightStack,
+      child: Stack(
+        // ignore: deprecated_member_use
+        overflow: Overflow.visible,
+        alignment: AlignmentDirectional.topCenter,
+        children: [
+          Positioned(
+              top: 0,
+              width: widthStack * 0.7,
+              height: heightStack * 0.5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  color: Theme.of(context).accentColor,
                 ),
+                child: Container(),
               )),
-        ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-              width: MediaQuery.of(context).size.width * 0.3,
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Center(
-                child: ShowHand(
-                  cards: gameManager.game.players[1].gameCards,
-                  disableSelection: true,
-                  faceDown: true,
+          Positioned(
+            bottom: 30,
+            child: ShowHand(
+                isScrollable: false,
+                cards: player.gameCards,
+                faceDown: true,
+                disableSelection: true,
+                ratio: 2 * widthStack / 600),
+          ),
+          Positioned(
+            bottom: heightStack * 0.9,
+            right: widthStack * 0.7,
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Text(
+                player.name,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
                 ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getStackPlayer0(BuildContext context) {
+    double widthStack = width * 0.5;
+    double heightStack = height * 0.3;
+    Player player = widget.game.players[0];
+    return Container(
+      alignment: Alignment.bottomCenter,
+      width: widthStack,
+      height: heightStack,
+      child: Stack(
+        // ignore: deprecated_member_use
+        overflow: Overflow.visible,
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          Positioned(
+              bottom: 0,
+              width: widthStack * 0.7,
+              height: heightStack * 0.5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  color: Theme.of(context).accentColor,
+                ),
+                child: Container(),
               )),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Text("Les Cartes ont été distribuées"),
-        )
-      ],
+          Positioned(
+            bottom: 30,
+            child: ShowHand(
+                isScrollable: false,
+                cards: player.gameCards,
+                faceDown: true,
+                disableSelection: true,
+                ratio: 2 * widthStack / 600),
+          ),
+          Positioned(
+            bottom: heightStack * 0.9,
+            right: widthStack * 0.7,
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Text(
+                player.name,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

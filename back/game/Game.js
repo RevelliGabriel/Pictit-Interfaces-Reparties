@@ -15,6 +15,7 @@ const createGame = (name) => {
         players: [],
         playersCards: [],
         playerOut: null,
+        oldPlayers: [],
         playersOut: [],
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
@@ -102,8 +103,10 @@ const createGame = (name) => {
                 }
             } else if (topic == 'game-ended') {
                 this.board.notifyGameChange(this);
-                for (let i = 0; i < this.players.length; ++i) {
-                    this.players[i].notifyGameStopped();
+                console.log("LOOOOOOOOOOOOCO");
+                console.log(this.oldPlayers);
+                for (let i = 0; i < this.oldPlayers.length; ++i) {
+                    this.oldPlayers[i].notifyGameStopped();
                 }
             } else if (topic == 'new-hands') {
                 for (let i = 0; i < this.players.length; ++i) {
@@ -254,6 +257,7 @@ const createGame = (name) => {
         launch() {
             console.log('\nAll players are ready, the game is launched !!');
             console.log('\t\t', this.name, " started..!");
+            this.oldPlayers = [...this.players];
             this.generateIntrus();
             this.getIntrusPlayer().setIntrus();
             console.log("L'intrus est : ", this.getIntrusPlayer().name);

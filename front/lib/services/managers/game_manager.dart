@@ -102,6 +102,10 @@ class GameManager implements Manager {
       _addStep(game.status);
       _gameUpdated.sink.add(true);
     });
+
+    _socket.on('game-ended', (_) {
+      _addStep(GameStepEnum.ENDGAME);
+    });
   }
 
   Future<bool> tradeCard(int id) async {

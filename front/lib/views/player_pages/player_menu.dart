@@ -38,7 +38,7 @@ class _PlayerMenuState extends State<PlayerMenu> {
                 children: [
                   Flexible(
                       flex: 1,
-                      child: Image.asset("assets/images/CardBack.jpg")),
+                      child: Image.asset("assets/images/GameLogo.jpg")),
                   Flexible(
                       flex: 2,
                       child: ElevatedButton(

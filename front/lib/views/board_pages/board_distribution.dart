@@ -51,23 +51,23 @@ class _BoardDistributionState extends State<BoardDistribution> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
-                      topRight: Radius.circular(20)),
+                      bottomRight: Radius.circular(20)),
                   color: Theme.of(context).accentColor,
                 ),
                 child: Container(),
               )),
           Positioned(
-            bottom: 30,
+            top: 30,
             child: ShowHand(
                 isScrollable: false,
                 cards: player.gameCards,
                 faceDown: true,
                 disableSelection: true,
-                ratio: 2 * widthStack / 600),
+                ratio: 2 * widthStack / 1000),
           ),
           Positioned(
-            bottom: heightStack * 0.9,
-            right: widthStack * 0.7,
+            top: heightStack * 0.9,
+            left: widthStack * 0.7,
             child: Container(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -122,7 +122,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
                 cards: player.gameCards,
                 faceDown: true,
                 disableSelection: true,
-                ratio: 2 * widthStack / 600),
+                ratio: 2 * widthStack / 1000),
           ),
           Positioned(
             bottom: heightStack * 0.9,

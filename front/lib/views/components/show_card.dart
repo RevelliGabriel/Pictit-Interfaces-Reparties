@@ -6,7 +6,7 @@ class ShowCard extends StatefulWidget {
   final bool selected;
   final GameCard card;
   final double ratio;
-  final double weight = 70;
+  final double width = 70;
   final double height = 100;
 
   ShowCard(
@@ -27,14 +27,15 @@ class _ShowCardState extends State<ShowCard> {
           ? 1.2 * widget.ratio * widget.height
           : widget.ratio * widget.height,
       width: widget.selected
-          ? 1.2 * widget.ratio * widget.weight
-          : widget.ratio * widget.weight,
+          ? 1.2 * widget.ratio * widget.width
+          : widget.ratio * widget.width,
       decoration: BoxDecoration(
           image: DecorationImage(
               fit: BoxFit.fitHeight,
               image: AssetImage(
                   widget.faceDown ? widget.card.downPath : widget.card.path)),
           border: Border.all(
+            color: Theme.of(context).primaryColorDark,
             width: widget.selected ? 1.2 * widget.ratio * 2 : widget.ratio * 2,
           ),
           borderRadius: BorderRadius.circular(10)),

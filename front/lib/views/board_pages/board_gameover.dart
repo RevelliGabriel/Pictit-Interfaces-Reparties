@@ -45,7 +45,7 @@ class _BoardGameoverState extends State<BoardGameover> {
                 child: Container(
                       height: 100,
                       width: 100,
-                      child: Image.asset("/images/tada_left.png")
+                      child: Image.asset("assets/images/tada_left.png")
                       ),
               ),
               Container(
@@ -91,7 +91,7 @@ class _BoardGameoverState extends State<BoardGameover> {
                 child: Container(
                       height: 100,
                       width: 100,
-                      child: Image.asset("/images/tada_right.png")
+                      child: Image.asset("assets/images/tada_right.png")
                       ),
               ),
             ],

@@ -26,17 +26,17 @@ class _BoardWrapperState extends State<BoardWrapper> {
             if (snapshot.data == GameStepEnum.IDENTIFYING) {
               return BoardLobby();
             } else if (snapshot.data == GameStepEnum.DISTRIBUTION) {
-              return BoardDistribution();
+              return BoardDistribution(game : gameManager.game);
             } else if (snapshot.data == GameStepEnum.SWAPCARD) {
-              return BoardDistribution();
+              return BoardDistribution(game : gameManager.game);
             } else if (snapshot.data == GameStepEnum.WRITEWORD) {
-              return BoardDistribution();
+              return BoardDistribution(game : gameManager.game);
             } else if (snapshot.data == GameStepEnum.TURNPLAY) {
-              return BoardDistribution();
+              return BoardDistribution(game : gameManager.game);
             } else if (snapshot.data == GameStepEnum.TURNVOTE) {
-              return BoardDistribution();
+              return BoardDistribution(game : gameManager.game);
             } else if (snapshot.data == GameStepEnum.ENDGAME) {
-              return BoardDistribution();
+              return BoardDistribution(game : gameManager.game);
             }
             return Container();
           }),

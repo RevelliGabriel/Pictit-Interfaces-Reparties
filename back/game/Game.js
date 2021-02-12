@@ -172,6 +172,8 @@ const createGame = (name) => {
         async playUntilSomeoneWin() {
             while (true) {
                 // playturn
+                this.state = 4;
+                this.board.notifyGameChange(this);
                 await this.playOneTrun();
                 if (this.playerOut.isIntrus) {
                     // this.getIntrusPlayer().askLastWord();
@@ -190,8 +192,6 @@ const createGame = (name) => {
                     } 
                 }
                 console.log("nouveau tour")
-                this.state = 4;
-                this.board.notifyGameChange(this);
                 // replay till players here
             }
         },
@@ -268,6 +268,7 @@ const createGame = (name) => {
                 console.log("Fin de la distribution");
                 console.log("\nDebut des trades");
                 this.state = 2;
+                this.board.notifyGameChange(this);
                 return this.tradeCardsOneByOne();
             }).then(resp => {
                 console.log("Fin des trades");

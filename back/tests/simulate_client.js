@@ -2,7 +2,7 @@ const
     io = require("socket.io-client"),
     socket = io.connect("http://localhost:3000");
 
-socket.on('connect', function () { console.log("socket connected"); });
+socket.on('connect', function () { //console.log("socket connected"); });
 socket.emit(
     "identify",
     {

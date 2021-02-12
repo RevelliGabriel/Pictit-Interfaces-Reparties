@@ -3,12 +3,10 @@ import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/models/player.dart';
 
 class Game {
-  String name;
   List<Player> players;
   GameStepEnum status;
 
   Game() {
-    this.name = "";
     this.status = GameStepEnum.IDENTIFYING;
     this.players = [];
   }
@@ -26,7 +24,6 @@ class Game {
       print(jsonPlayer);
       this.players.add(Player.fromJson(jsonPlayer));
     }
-    this.name = json['name'];
     this.status = GameStepEnum.values.elementAt(json['state']);
     this.players.elementAt(json['intrusPosPlayer'] as int).isIntrus = true;
     setPlayerPlaying(json['currentPosPlayer'] as int);

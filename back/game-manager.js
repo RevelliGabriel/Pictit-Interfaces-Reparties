@@ -9,7 +9,7 @@ const createGameManager = () => {
                 game = availableGames[name];
             } else {
                 game = createGame(name);
-                console.log("\nNew game created : ", name)
+                //console.log("\nNew game created : ", name)
                 availableGames[name] = game;
             }
             return game;

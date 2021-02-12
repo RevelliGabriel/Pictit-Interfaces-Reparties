@@ -2,7 +2,7 @@ const Card = require('./Card');
 
 module.exports = class Deck {
     constructor() {
-        console.log("\tcréation du deck")
+        //console.log("\tcréation du deck")
         this.deck = [];
         for (let i = 0; i < 16; ++i) {
             this.deck.push(new Card(i));

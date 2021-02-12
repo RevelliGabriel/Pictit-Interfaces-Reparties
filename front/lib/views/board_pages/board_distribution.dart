@@ -7,15 +7,16 @@ import 'package:front/views/components/show_hand.dart';
 
 class BoardDistribution extends StatefulWidget {
   final Game game;
+  final String text;
 
-  BoardDistribution({@required this.game});
+  BoardDistribution({@required this.game, this.text = ""});
 
   @override
   _BoardDistributionState createState() => _BoardDistributionState();
 }
 
 class _BoardDistributionState extends State<BoardDistribution> {
-  //GameManager gameManager = Global().fetch(GameManager);
+  GameManager gameManager = Global().fetch(GameManager);
   double height;
   double width;
 
@@ -23,9 +24,30 @@ class _BoardDistributionState extends State<BoardDistribution> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
+    if (widget.game.players.length < 2) {
+      return Container();
+    }
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       getStackPlayer1(context),
-      Expanded(child: Container(color: Colors.yellow,)),
+      Expanded(
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.only(
+                left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
       getStackPlayer0(context),
     ]);
   }

@@ -186,16 +186,17 @@ const createGame = (name) => {
                     console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
                     break;
                 }
-                else{
-                    if (this.intrusPosPlayer > this.playerOut.position){
+                else {
+                    if (this.intrusPosPlayer > this.playerOut.position) {
                         this.intrusPosPlayer--;
-                    } 
+                    }
                 }
                 console.log("nouveau tour")
                 // replay till players here
             }
         },
         async playOneTrun() {
+            console.log('\n position du premier joeur a jouer le tour : ', this.currentPosPlayer)
             for (let player of this.players) {
                 console.log("\ndebut du tour de", player.name)
                 this.board.notifyGameChange(this);
@@ -207,7 +208,9 @@ const createGame = (name) => {
                 this.board.notifyGameChange(this);
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
                 console.log("fin du tour de", player.name)
+                console.log('\n etat des cartes joueés : ', this.playersCards)
             }
+            console.log('\n position du current player avant vote : ', this.currentPosPlayer)
             this.state = 5;
             this.board.notifyGameChange(this);
             return this.askVotes();
@@ -252,7 +255,7 @@ const createGame = (name) => {
             return Promise.all(promises);
         },
         canStart() {
-            return this.players.length === 2 && this.board != null;
+            return this.players.length === 4 && this.board != null;
         },
         launch() {
             console.log('\nAll players are ready, the game is launched !!');

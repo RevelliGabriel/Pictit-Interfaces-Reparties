@@ -174,28 +174,29 @@ const createGame = (name) => {
                 this.state = 4;
                 this.board.notifyGameChange(this);
                 await this.playOneTrun();
-                // if (this.playerOut.isIntrus) {
-                //     // this.getIntrusPlayer().askLastWord();
-                //     // fin du jeu
-                //     //console.log("fin du jeu, l'intrus a été éliminé : ", this.playerOut.name)
-                //     break;
-                // } else if (this.players.length == 1) {
-                //     // un joueur a gagné
-                //     // fin du jeu
-                //     //console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
-                //     break;
-                // }
-                // else{
-                //     if (this.intrusPosPlayer > this.playerOut.position){
-                //         this.intrusPosPlayer--;
-                //     } 
-                // }
+                if (this.playerOut.isIntrus) {
+                    // this.getIntrusPlayer().askLastWord();
+                    // fin du jeu
+                    console.log("fin du jeu, l'intrus a été éliminé : ", this.playerOut.name)
+                    break;
+                } else if (this.players.length == 1) {
+                    // un joueur a gagné
+                    // fin du jeu
+                    console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
+                    break;
+                }
+                else {
+                    if (this.intrusPosPlayer > this.playerOut.position) {
+                        this.intrusPosPlayer--;
+                    }
+                }
                 console.log("nouveau tour")
                 // replay till players here
                 return true;
             }
         },
         async playOneTrun() {
+            console.log('\n position du premier joeur a jouer le tour : ', this.currentPosPlayer)
             for (let player of this.players) {
                 //console.log("\ndebut du tour de", player.name)
                 this.board.notifyGameChange(this);
@@ -205,9 +206,10 @@ const createGame = (name) => {
                 this.playersCards[this.currentPosPlayer] = card;
                 player.notifyHand();
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
-                this.board.notifyGameChange(this);
-                //console.log("fin du tour de", player.name)
+                console.log("fin du tour de", player.name)
+                console.log('\n etat des cartes joueés : ', this.playersCards)
             }
+            console.log('\n position du current player avant vote : ', this.currentPosPlayer)
             this.state = 5;
             this.board.notifyGameChange(this);
             return this.askVotes();
@@ -252,7 +254,7 @@ const createGame = (name) => {
             return Promise.all(promises);
         },
         canStart() {
-            return this.players.length === 2 && this.board != null;
+            return this.players.length === 4 && this.board != null;
         },
         launch() {
             //console.log('\nAll players are ready, the game is launched !!');

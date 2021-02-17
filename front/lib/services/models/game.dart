@@ -30,10 +30,17 @@ class Game {
   }
 
   void setPlayerPlaying(int pos) {
-    if (status != GameStepEnum.IDENTIFYING) {
+    if (status != GameStepEnum.IDENTIFYING &&
+        status != GameStepEnum.WRITEWORD &&
+        status != GameStepEnum.TURNVOTE) {
       this.players.map((e) => e.state = GamePlayerStateEnum.WAITING);
       this.players.elementAt(pos).state = GamePlayerStateEnum.PLAYING;
+    } else if (status == GameStepEnum.WRITEWORD ||
+        status == GameStepEnum.TURNVOTE) {
+      this.players.map((e) => e.state = GamePlayerStateEnum.PLAYING);
+    } else {
+      this.players.map((e) => e.state = GamePlayerStateEnum.JOINED_GAME);
     }
-    this.players.map((e) => e.state = GamePlayerStateEnum.JOINED_GAME);
+    print("c'est à toi de jouer " + pos.toString());
   }
 }

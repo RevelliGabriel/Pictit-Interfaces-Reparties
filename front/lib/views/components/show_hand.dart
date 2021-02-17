@@ -30,15 +30,19 @@ class _ShowHandState extends State<ShowHand> {
   @override
   Widget build(BuildContext context) {
     if (widget.isScrollable) {
-      return ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: widget.cards.length,
-          itemBuilder: (context, index) {
-            return constructCard(widget.cards.elementAt(index));
-          });
+      return Container(
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.cards.length,
+            itemBuilder: (context, index) {
+              return constructCard(widget.cards.elementAt(index));
+            }),
+      );
     }
-    return Row(
-      children: [...widget.cards.map((e) => constructCard(e))],
+    return Container(
+      child: Row(
+        children: [...widget.cards.map((e) => constructCard(e))],
+      ),
     );
   }
 

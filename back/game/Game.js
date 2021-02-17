@@ -49,7 +49,7 @@ const createGame = (name) => {
         },
         generateIntrus() {
             min = Math.ceil(0);
-            max = Math.floor(this.players.length - 1);
+            max = Math.floor(this.players.length);
             this.intrusPosPlayer = Math.floor(Math.random() * (max - min)) + min;
             //console.log("intrus pos : ", this.intrusPosPlayer)
         },
@@ -174,37 +174,38 @@ const createGame = (name) => {
                 this.state = 4;
                 this.board.notifyGameChange(this);
                 await this.playOneTrun();
-                if (this.playerOut.isIntrus) {
-                    // this.getIntrusPlayer().askLastWord();
-                    // fin du jeu
-                    //console.log("fin du jeu, l'intrus a été éliminé : ", this.playerOut.name)
-                    break;
-                } else if (this.players.length == 1) {
-                    // un joueur a gagné
-                    // fin du jeu
-                    //console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
-                    break;
-                }
-                else{
-                    if (this.intrusPosPlayer > this.playerOut.position){
-                        this.intrusPosPlayer--;
-                    } 
-                }
+                // if (this.playerOut.isIntrus) {
+                //     // this.getIntrusPlayer().askLastWord();
+                //     // fin du jeu
+                //     //console.log("fin du jeu, l'intrus a été éliminé : ", this.playerOut.name)
+                //     break;
+                // } else if (this.players.length == 1) {
+                //     // un joueur a gagné
+                //     // fin du jeu
+                //     //console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
+                //     break;
+                // }
+                // else{
+                //     if (this.intrusPosPlayer > this.playerOut.position){
+                //         this.intrusPosPlayer--;
+                //     } 
+                // }
                 console.log("nouveau tour")
                 // replay till players here
+                return true;
             }
         },
         async playOneTrun() {
             for (let player of this.players) {
                 //console.log("\ndebut du tour de", player.name)
-                //this.board.notifyGameChange(this);
+                this.board.notifyGameChange(this);
                 let cardId = await player.askCard();
                 let card = player.hand.find(elem => elem.id == cardId)
                 player.hand = player.hand.filter(card => card.id != cardId)
                 this.playersCards[this.currentPosPlayer] = card;
                 player.notifyHand();
-                //this.board.notifyGameChange(this);
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
+                this.board.notifyGameChange(this);
                 //console.log("fin du tour de", player.name)
             }
             this.state = 5;
@@ -273,6 +274,7 @@ const createGame = (name) => {
                 //console.log("Fin des trades");
                 //console.log("\nDebut des choix de mots");
                 this.state = 3;
+                this.board.notifyGameChange(this);
                 return this.chooseWord();
             }).then(resp => {
                 //console.log("Fin des mots");

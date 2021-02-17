@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/game.dart';
@@ -74,7 +75,9 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20)),
-                  color: Theme.of(context).accentColor,
+                  color: (player.state == GamePlayerStateEnum.PLAYING)
+                      ? Theme.of(context).primaryColorDark
+                      : Theme.of(context).accentColor,
                 ),
                 child: Container(),
               )),

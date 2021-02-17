@@ -3,6 +3,7 @@ import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/card.dart';
+import 'package:front/views/components/loading.dart';
 import 'package:front/views/components/show_hand.dart';
 import 'package:front/views/player_pages/player_end_game.dart';
 import 'package:front/views/player_pages/player_identify.dart';
@@ -17,6 +18,7 @@ class PlayerWrapper extends StatefulWidget {
 
 class _PlayerWrapperState extends State<PlayerWrapper> {
   bool wordOk = false;
+  bool swapOk = false;
   GameManager gameManager = Global().fetch(GameManager);
 
   @override
@@ -49,16 +51,22 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
-                    flex: 1,
-                    child: ShowHand(
-                        cards: gameManager.other.gameCards,
-                        function: (GameCard card) {
-                          gameManager.tradeCard(card.id);
-                        })),
+                  flex: 1,
+                  child: ShowHand(
+                      cards: gameManager.other.gameCards,
+                      function: (GameCard card) {
+                        gameManager.tradeCard(card.id);
+                        setState(() {
+                          swapOk = true;
+                        });
+                      }),
+                ),
                 Flexible(
                   flex: 1,
-                  child: Text(
-                      "Veuillez choisir une carte dans la mains de l'adversaire"),
+                  child: (swapOk)
+                      ? Loading()
+                      : Text(
+                          "Veuillez choisir une carte dans la mains de l'adversaire"),
                 ),
                 Flexible(
                     flex: 1,

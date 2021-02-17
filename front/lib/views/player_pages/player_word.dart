@@ -17,6 +17,7 @@ class _PlayerWordState extends State<PlayerWord> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Flexible(
             flex: 1, child: Center(child: Text("Quel mot veux-tu choisir ?"))),

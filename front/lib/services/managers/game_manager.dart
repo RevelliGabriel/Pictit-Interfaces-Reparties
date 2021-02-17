@@ -98,10 +98,10 @@ class GameManager implements Manager {
     });
 
     _socket.on('update-game', (dynamic json) {
+      print(json);
       game.updateGameFromJson(json['game']);
       _addStep(game.status);
       _gameUpdated.sink.add(true);
-      print(game.status);
     });
 
     _socket.on('game-ended', (_) {

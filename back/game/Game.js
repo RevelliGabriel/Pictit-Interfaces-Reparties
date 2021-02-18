@@ -14,11 +14,12 @@ const createGame = (name) => {
         word: "",
         players: [],
         playersCards: [],
-        playerOut: null,
+        playerNameOut: "",
         oldPlayers: [],
         playersOut: [],
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
+        intrusName: "",
 
         addBoard(board) {
             this.board = board
@@ -30,7 +31,9 @@ const createGame = (name) => {
                 player.setPosition(this.players.length - 1);
                 //player.setGame(this);
                 //this.board.notifyPlayersList(this.players);
-                this.board.notifyGameChange(this)
+                if(this.board){
+                    this.board.notifyGameChange(this);
+                }
                 //console.log("\t--new player join the game : ", player.name)
                 return true;
             }
@@ -51,13 +54,19 @@ const createGame = (name) => {
             min = Math.ceil(0);
             max = Math.floor(this.players.length);
             this.intrusPosPlayer = Math.floor(Math.random() * (max - min)) + min;
-            //console.log("intrus pos : ", this.intrusPosPlayer)
+            console.log("intrus pos : ", this.intrusPosPlayer);
+            this.intrusName = this.getIntrusPlayer().name;
         },
         notifyGameBoard() {
-            this.board.notify(this.players)
+            this.board.notify(this.players);
         },
-        deletePlayer(player) {
-            delete this.players[player.position];
+        delatePlayers(name) {
+            const pl = this.players.find(elem => elem.name == name); 
+            if (this.intrusPosPlayer > pl.position) {
+                this.intrusPosPlayer--;
+            }
+            this.playersOut.push(pl);
+            this.players = this.players.filter(elem => elem.name != name);     
         },
         hasPlayer(player) {
             // //console.log("hasPlayer check, player :", player)
@@ -80,7 +89,7 @@ const createGame = (name) => {
                 pos++;
             return pos
         },
-        getPlayerMaxVote(votes) {
+        getPlayerNameMaxVote(votes) {
             var max = 0;
             var playerName = "";
             for (var name of votes) {
@@ -91,9 +100,7 @@ const createGame = (name) => {
                     playerName = name;
                 }
             }
-            let player = this.players.find(elem => elem.name = playerName);
-            //console.log('Player out :', player)
-            return player;
+            return playerName;
         },
         notifyAllPlayers(topic) {
             if (topic == 'game-started') {
@@ -120,10 +127,9 @@ const createGame = (name) => {
             } else if (topic == 'player-out') {
                 this.board.notifyGameChange(this);
                 for (let i = 0; i < this.players.length; ++i) {
-                    this.players[i].notifyPlayerOut(this.playerOut);
+                    this.players[i].notifyPlayerOut(this.playerNameOut);
                 }
-                this.deletePlayer(this.playerOut);
-                this.playersOut.push(this.playerOut);
+                this.delatePlayers(this.playerNameOut);
             }
             return true;
         },
@@ -174,26 +180,23 @@ const createGame = (name) => {
                 this.state = 4;
                 this.board.notifyGameChange(this);
                 await this.playOneTrun();
-                if (this.playerOut.isIntrus) {
-                    // this.getIntrusPlayer().askLastWord();
+                console.log("Voici le player OUT", this.playerNameOut);
+                //if (this.playerNameOut.isIntrus) {
+                if (this.playerNameOut == this.intrusName){
+                    // this.players[this.intrusPosPlayer].askLastWord();
                     // fin du jeu
-                    console.log("fin du jeu, l'intrus a été éliminé : ", this.playerOut.name)
+                    console.log("fin du jeu, l'intrus a été éliminé : ", this.playerNameOut);
                     break;
-                } else if (this.players.length == 1) {
+                } else if (this.players.length == 2) {
                     // un joueur a gagné
                     // fin du jeu
-                    console.log("fin du jeu, un joueur a gagné : ", this.players[0].name)
+                    console.log("fin du jeu, un joueur a gagné : ", this.players[0].name);
                     break;
                 }
-                else {
-                    if (this.intrusPosPlayer > this.playerOut.position) {
-                        this.intrusPosPlayer--;
-                    }
-                }
-                console.log("nouveau tour")
-                // replay till players here
-                return true;
+                console.log("nouveau tour");
             }
+            console.log("fin partie");
+            return true;
         },
         async playOneTrun() {
             console.log('\n position du premier joeur a jouer le tour : ', this.currentPosPlayer)
@@ -216,11 +219,11 @@ const createGame = (name) => {
         },
         askVotes() {
             return Promise.all(this.players.map(player => player.askVote(this.players))).then((votes) => {
-                //console.log("Players votes : ", votes)
+                console.log("Players votes : ", votes);
                 // compute votes and determine player
                 // this.setNewWordToGame();
                 // this.getIndexPlayerMaxVote();
-                this.playerOut = this.getPlayerMaxVote(votes);
+                this.playerNameOut = this.getPlayerNameMaxVote(votes);
                 return this.notifyAllPlayers('player-out');
             });
         },
@@ -261,8 +264,8 @@ const createGame = (name) => {
             //console.log('\t\t', this.name, " started..!");
             this.oldPlayers = [...this.players];
             this.generateIntrus();
-            this.getIntrusPlayer().setIntrus();
-            //console.log("L'intrus est : ", this.getIntrusPlayer().name);
+            this.players[this.intrusPosPlayer].isIntrus = true;
+            console.log("L'intrus est : ", this.players[this.intrusPosPlayer]);
             //console.log("\nDebut de la distribution");
             return this.distribute().then(resp => {
                 this.state = 1;

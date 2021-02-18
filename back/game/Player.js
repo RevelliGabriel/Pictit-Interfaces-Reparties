@@ -4,15 +4,13 @@ const createPlayer = (socket, name) => {
     const obj = {
         name: name,
         hand: [],
-        position: '',
+        position: null,
         //game: null,
-        isIntrus: false,
+        isIntrus: null,
 
-        setIntrus() {
-            this.isIntrus = true;
-        },
         setPosition(pos) {
             this.position = pos;
+            this.isIntrus = false;
         },
         // disconnect() {
         //     if (this.game !== null)
@@ -38,11 +36,11 @@ const createPlayer = (socket, name) => {
                 });
             });
         },
-        notifyPlayerOut(player) {
-            if (this.name == player.name) {
+        notifyPlayerOut(name) {
+            if (this.name == name) {
                 socket.emit('self-player-out');
             }
-            socket.emit('player-out', player);
+            socket.emit('player-out', name);
         },
         notifyWord(word) {
             return new Promise((resolve, reject) => {

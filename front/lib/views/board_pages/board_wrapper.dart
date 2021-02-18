@@ -52,7 +52,11 @@ class _BoardWrapperState extends State<BoardWrapper> {
                 text: "Qui selon vous est l'intrus ?",
               );
             } else if (snapshot.data == GameStepEnum.ENDGAME) {
-              return BoardGameover();
+              return BoardGameover(
+                intruName: gameManager.game.intruName,
+                intruWin: gameManager.game.isIntruWinner,
+                word: gameManager.word,
+              );
             }
             return Container();
           }),

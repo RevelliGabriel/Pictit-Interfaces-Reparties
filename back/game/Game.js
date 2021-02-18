@@ -190,7 +190,7 @@ const createGame = (name) => {
                 } else if (this.players.length == 2) {
                     // un joueur a gagné
                     // fin du jeu
-                    console.log("fin du jeu, un joueur a gagné : ", this.players[0].name);
+                    console.log("fin du jeu, l'intrus a gagné");
                     break;
                 }
                 console.log("nouveau tour");

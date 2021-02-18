@@ -4,7 +4,10 @@ import 'package:front/services/models/player.dart';
 
 class Game {
   List<Player> players;
+  List<Player> allPlayers;
   GameStepEnum status;
+  String intruName;
+  bool isIntruWinner;
 
   Game() {
     this.status = GameStepEnum.IDENTIFYING;
@@ -20,8 +23,11 @@ class Game {
 
   void updateGameFromJson(dynamic json) {
     this.players = [];
+    this.allPlayers = [];
+    for (dynamic jsonPlayer in json['oldPlayers']) {
+      this.allPlayers.add(Player.fromJson(jsonPlayer));
+    }
     for (dynamic jsonPlayer in json['players']) {
-      print(jsonPlayer);
       this.players.add(Player.fromJson(jsonPlayer));
     }
     this.status = GameStepEnum.values.elementAt(json['state']);
@@ -29,6 +35,9 @@ class Game {
       this.players.elementAt(json['intrusPosPlayer'] as int).isIntrus = true;
     }
     setPlayerPlaying(json['currentPosPlayer'] as int);
+    this.intruName = json['intrusName'];
+    this.isIntruWinner =
+        this.players.map((e) => e.name).contains(this.intruName);
   }
 
   void setPlayerPlaying(int pos) {

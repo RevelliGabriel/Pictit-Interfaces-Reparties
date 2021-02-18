@@ -102,6 +102,7 @@ class GameManager implements Manager {
       game.updateGameFromJson(json['game']);
       _addStep(game.status);
       _gameUpdated.sink.add(true);
+      word = json['game']['word'];
     });
 
     _socket.on('game-ended', (_) {

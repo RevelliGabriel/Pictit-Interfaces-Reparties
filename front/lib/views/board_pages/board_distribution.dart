@@ -29,7 +29,12 @@ class _BoardDistributionState extends State<BoardDistribution> {
       return Container();
     }
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      getStackPlayer1(context),
+      Row(
+        children: [
+          getStackPlayer3(context),
+          getStackPlayer2(context),
+        ],
+      ),
       Expanded(
         child: Center(
           child: Container(
@@ -49,25 +54,33 @@ class _BoardDistributionState extends State<BoardDistribution> {
           ),
         ),
       ),
-      getStackPlayer0(context),
+      Row(
+        children: [
+          getStackPlayer0(context),
+          getStackPlayer1(context),
+        ],
+      ),
     ]);
   }
 
-  Widget getStackPlayer1(BuildContext context) {
+  Widget getStackPlayer3(BuildContext context) {
     double widthStack = width * 0.5;
     double heightStack = height * 0.3;
-    Player player = widget.game.players[1];
+    String playerName = widget.game.allPlayers[3].name;
+    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
+    Player player = isDead ? widget.game.allPlayers[3] : widget.game.players.where((element) => element.name == playerName).first ;
     return Container(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.topLeft,
       width: widthStack,
       height: heightStack,
       child: Stack(
         // ignore: deprecated_member_use
         overflow: Overflow.visible,
-        alignment: AlignmentDirectional.topCenter,
+        alignment: Alignment.topLeft,
         children: [
           Positioned(
               top: 0,
+              left: 10,
               width: widthStack * 0.7,
               height: heightStack * 0.5,
               child: Container(
@@ -83,6 +96,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
               )),
           Positioned(
             top: 30,
+            left: 50,
             child: ShowHand(
                 isScrollable: false,
                 cards: player.gameCards,
@@ -92,7 +106,137 @@ class _BoardDistributionState extends State<BoardDistribution> {
           ),
           Positioned(
             top: heightStack * 0.9,
-            left: widthStack * 0.7,
+            left: 50,
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Text(
+                player.name,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getStackPlayer2(BuildContext context) {
+    double widthStack = width * 0.5;
+    double heightStack = height * 0.3;
+    String playerName = widget.game.allPlayers[2].name;
+    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
+    Player player = isDead ? widget.game.allPlayers[2] : widget.game.players.where((element) => element.name == playerName).first ;
+    return Container(
+      alignment: Alignment.topRight,
+      width: widthStack,
+      height: heightStack,
+      child: Stack(
+        // ignore: deprecated_member_use
+        overflow: Overflow.visible,
+        alignment: Alignment.topRight,
+        children: [
+          Positioned(
+              top: 0,
+              right: 10,
+              width: widthStack * 0.7,
+              height: heightStack * 0.5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20)),
+                  color: (player.state == GamePlayerStateEnum.PLAYING)
+                      ? Theme.of(context).primaryColorDark
+                      : Theme.of(context).accentColor,
+                ),
+                child: Container(),
+              )),
+          Positioned(
+            top: 30,
+            right: 50,
+            child: ShowHand(
+                isScrollable: false,
+                cards: player.gameCards,
+                faceDown: true,
+                disableSelection: true,
+                ratio: 2 * widthStack / 1000),
+          ),
+          Positioned(
+            top: heightStack * 0.9,
+            right: 50,
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Text(
+                player.name,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getStackPlayer1(BuildContext context) {
+    double widthStack = width * 0.5;
+    double heightStack = height * 0.3;
+    String playerName = widget.game.allPlayers[1].name;
+    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
+    Player player = isDead ? widget.game.allPlayers[1] : widget.game.players.where((element) => element.name == playerName).first ;
+    return Container(
+      alignment: Alignment.bottomRight,
+      width: widthStack,
+      height: heightStack,
+      child: Stack(
+        // ignore: deprecated_member_use
+        overflow: Overflow.visible,
+        alignment: Alignment.bottomRight,
+        children: [
+          Positioned(
+              bottom: 0,
+              right: 10,
+              width: widthStack * 0.7,
+              height: heightStack * 0.5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  color: (player.state == GamePlayerStateEnum.PLAYING)
+                      ? Theme.of(context).primaryColorDark
+                      : Theme.of(context).accentColor,
+                ),
+                child: Container(),
+              )),
+          Positioned(
+            bottom: 30,
+            right: 50,
+            child: ShowHand(
+                isScrollable: false,
+                cards: player.gameCards,
+                faceDown: true,
+                disableSelection: true,
+                ratio: 2 * widthStack / 1000),
+          ),
+          Positioned(
+            bottom: heightStack * 0.9,
+            right: 50,
             child: Container(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -117,18 +261,21 @@ class _BoardDistributionState extends State<BoardDistribution> {
   Widget getStackPlayer0(BuildContext context) {
     double widthStack = width * 0.5;
     double heightStack = height * 0.3;
-    Player player = widget.game.players[0];
+    String playerName = widget.game.allPlayers[0].name;
+    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
+    Player player = isDead ? widget.game.allPlayers[0] : widget.game.players.where((element) => element.name == playerName).first ;
     return Container(
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.bottomLeft,
       width: widthStack,
       height: heightStack,
       child: Stack(
         // ignore: deprecated_member_use
         overflow: Overflow.visible,
-        alignment: AlignmentDirectional.bottomCenter,
+        alignment: Alignment.bottomLeft,
         children: [
           Positioned(
               bottom: 0,
+              left: 10,
               width: widthStack * 0.7,
               height: heightStack * 0.5,
               child: Container(
@@ -136,12 +283,15 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20)),
-                  color: Theme.of(context).accentColor,
+                  color: (player.state == GamePlayerStateEnum.PLAYING)
+                      ? Theme.of(context).primaryColorDark
+                      : Theme.of(context).accentColor,
                 ),
                 child: Container(),
               )),
           Positioned(
             bottom: 30,
+            left: 50,
             child: ShowHand(
                 isScrollable: false,
                 cards: player.gameCards,
@@ -151,7 +301,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
           ),
           Positioned(
             bottom: heightStack * 0.9,
-            right: widthStack * 0.7,
+            left: 50,
             child: Container(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),

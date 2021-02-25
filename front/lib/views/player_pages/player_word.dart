@@ -24,10 +24,14 @@ class _PlayerWordState extends State<PlayerWord> {
         Flexible(flex: 1, child: getChosenWord(context)),
         Flexible(
             flex: 2,
-            child: ShowHand(
-              cards: gameManager.me.gameCards,
-              disableSelection: true,
-            ))
+            child: Container(
+              height: 150,
+              child: ShowHand(
+                ratio: 1.5,
+                cards: gameManager.me.gameCards,
+                disableSelection: true,
+              ),
+            )),
       ],
     );
   }

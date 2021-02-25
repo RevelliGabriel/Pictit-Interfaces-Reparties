@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/card.dart';
 import 'package:front/views/components/loading.dart';
 import 'package:front/views/components/show_hand.dart';
+import 'package:front/views/player_pages/player_eliminated.dart';
 import 'package:front/views/player_pages/player_end_game.dart';
 import 'package:front/views/player_pages/player_identify.dart';
 import 'package:front/views/player_pages/player_turn_play.dart';
@@ -51,10 +53,14 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
                         "En attente de l'échange de cartes entre deux joueurs")),
                 Flexible(
                     flex: 1,
-                    child: ShowHand(
-                      cards: gameManager.me.gameCards,
-                      disableSelection: true,
-                    ))
+                    child: Container(
+                      height: 150,
+                      child: ShowHand(
+                        ratio: 1.5,
+                        cards: gameManager.me.gameCards,
+                        disableSelection: true,
+                      ),
+                    )),
               ],
             );
           } else if (snapshot.data == GameStepEnum.SWAPCARD) {
@@ -62,16 +68,19 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
-                  flex: 1,
-                  child: ShowHand(
-                      cards: gameManager.other.gameCards,
-                      function: (GameCard card) {
-                        gameManager.tradeCard(card.id);
-                        setState(() {
-                          swapOk = true;
-                        });
-                      }),
-                ),
+                    flex: 1,
+                    child: Container(
+                      height: 150,
+                      child: ShowHand(
+                          ratio: 1.5,
+                          cards: gameManager.other.gameCards,
+                          function: (GameCard card) {
+                            gameManager.tradeCard(card.id);
+                            setState(() {
+                              swapOk = true;
+                            });
+                          }),
+                    )),
                 Flexible(
                   flex: 1,
                   child: (swapOk)
@@ -81,10 +90,14 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
                 ),
                 Flexible(
                     flex: 1,
-                    child: ShowHand(
-                      cards: gameManager.me.gameCards,
-                      disableSelection: true,
-                    ))
+                    child: Container(
+                      height: 150,
+                      child: ShowHand(
+                        ratio: 1.5,
+                        cards: gameManager.me.gameCards,
+                        disableSelection: true,
+                      ),
+                    )),
               ],
             );
           } else if (snapshot.data == GameStepEnum.WRITEWORD) {
@@ -114,6 +127,9 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             return PlayerTurnPlay();
           } else if (snapshot.data == GameStepEnum.TURNVOTE) {
             return PlayerTurnVote();
+          } else if (snapshot.data == GameStepEnum.ENDGAME &&
+              gameManager.me.state == GamePlayerStateEnum.ELIMINATED) {
+            return PlayerEliminated();
           } else if (snapshot.data == GameStepEnum.ENDGAME) {
             return PlayerEndGame();
           }

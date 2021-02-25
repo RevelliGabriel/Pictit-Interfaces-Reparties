@@ -43,8 +43,9 @@ const createPlayer = (socket, name) => {
         notifyPlayerOut(name) {
             if (this.name == name) {
                 socket.emit('self-player-out');
+            } else {
+                socket.emit('player-out', name);
             }
-            socket.emit('player-out', name);
         },
         notifyWord(word) {
             return new Promise((resolve, reject) => {
@@ -77,8 +78,8 @@ const createPlayer = (socket, name) => {
         notifyGameStopped() {
             socket.emit('game-ended');
         },
-        notifyPlayersList(players){
-            socket.emit('update-players', {players : players});
+        notifyPlayersList(players) {
+            socket.emit('update-players', { players: players });
         },
         askTrade(nextPlayer) {
             cards = nextPlayer.getHand();

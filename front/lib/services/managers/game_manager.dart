@@ -25,21 +25,24 @@ class GameManager implements Manager {
   StreamController<GamePlayerStateEnum> _gamePlayerStateStepController =
       StreamController.broadcast();
   StreamController<bool> _gameUpdated = StreamController.broadcast();
-  StreamController<List<Player>> _playersController = StreamController.broadcast();
+  StreamController<List<Player>> _playersController =
+      StreamController.broadcast();
 
   Stream<bool> get gameUpdatedStream => _gameUpdated.stream;
   Stream<GameStepEnum> get gameStepStream => _gameStepController.stream;
   Stream<GamePlayerStateEnum> get gamePlayerStateStream =>
       _gamePlayerStateStepController.stream;
-  Stream<List<Player>> get playersStream =>
-      _playersController.stream;
+  Stream<List<Player>> get playersStream => _playersController.stream;
 
   StreamController<dynamic> _hintController = StreamController.broadcast();
   Stream<dynamic> get hintStream => _hintController.stream;
 
   void _addStep(GameStepEnum gameStep) {
-    _gameStepController.sink.add(gameStep);
-    game.status = gameStep;
+    if (me.state != GamePlayerStateEnum.ELIMINATED ||
+        gameStep == GameStepEnum.ENDGAME) {
+      _gameStepController.sink.add(gameStep);
+      game.status = gameStep;
+    }
   }
 
   void _addPlayerStep(GamePlayerStateEnum playerStep) {
@@ -106,7 +109,9 @@ class GameManager implements Manager {
 
     _socket.on('self-player-out', (data) {
       // TODO: add condition if game not finish to return in the turnplay state
+      print("Vous avez été éliminé");
       _addStep(GameStepEnum.ENDGAME);
+      me.state = GamePlayerStateEnum.ELIMINATED;
     });
 
     _socket.on('player-out', (player) {

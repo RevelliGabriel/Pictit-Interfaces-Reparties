@@ -67,8 +67,15 @@ class _BoardDistributionState extends State<BoardDistribution> {
     double widthStack = width * 0.5;
     double heightStack = height * 0.3;
     String playerName = widget.game.allPlayers[3].name;
-    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
-    Player player = isDead ? widget.game.allPlayers[3] : widget.game.players.where((element) => element.name == playerName).first ;
+    Player plyFound = widget.game.players.firstWhere(
+        (element) => element.name == playerName,
+        orElse: () => null);
+    bool isDead = plyFound == null;
+    Player player = isDead
+        ? widget.game.allPlayers[3]
+        : widget.game.players
+            .where((element) => element.name == playerName)
+            .first;
     return Container(
       alignment: Alignment.topLeft,
       width: widthStack,
@@ -132,8 +139,15 @@ class _BoardDistributionState extends State<BoardDistribution> {
     double widthStack = width * 0.5;
     double heightStack = height * 0.3;
     String playerName = widget.game.allPlayers[2].name;
-    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
-    Player player = isDead ? widget.game.allPlayers[2] : widget.game.players.where((element) => element.name == playerName).first ;
+    Player plyFound = widget.game.players.firstWhere(
+        (element) => element.name == playerName,
+        orElse: () => null);
+    bool isDead = plyFound == null;
+    Player player = isDead
+        ? widget.game.allPlayers[2]
+        : widget.game.players
+            .where((element) => element.name == playerName)
+            .first;
     return Container(
       alignment: Alignment.topRight,
       width: widthStack,
@@ -197,8 +211,15 @@ class _BoardDistributionState extends State<BoardDistribution> {
     double widthStack = width * 0.5;
     double heightStack = height * 0.3;
     String playerName = widget.game.allPlayers[1].name;
-    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
-    Player player = isDead ? widget.game.allPlayers[1] : widget.game.players.where((element) => element.name == playerName).first ;
+    Player plyFound = widget.game.players.firstWhere(
+        (element) => element.name == playerName,
+        orElse: () => null);
+    bool isDead = plyFound == null;
+    Player player = isDead
+        ? widget.game.allPlayers[1]
+        : widget.game.players
+            .where((element) => element.name == playerName)
+            .first;
     return Container(
       alignment: Alignment.bottomRight,
       width: widthStack,
@@ -262,8 +283,15 @@ class _BoardDistributionState extends State<BoardDistribution> {
     double widthStack = width * 0.5;
     double heightStack = height * 0.3;
     String playerName = widget.game.allPlayers[0].name;
-    bool isDead = widget.game.players.where((element) => element.name == playerName).length == 1;
-    Player player = isDead ? widget.game.allPlayers[0] : widget.game.players.where((element) => element.name == playerName).first ;
+    Player plyFound = widget.game.players.firstWhere(
+        (element) => element.name == playerName,
+        orElse: () => null);
+    bool isDead = plyFound == null;
+    Player player = isDead
+        ? widget.game.allPlayers[0]
+        : widget.game.players
+            .where((element) => element.name == playerName)
+            .first;
     return Container(
       alignment: Alignment.bottomLeft,
       width: widthStack,

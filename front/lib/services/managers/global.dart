@@ -8,7 +8,7 @@ import 'manager.dart';
 /// Singleton manager that is accessible from everywhere
 class Global {
   // Configure socket transports must be sepecified
-  Socket _socket = io('http://127.0.0.1:3000', <String, dynamic>{
+  Socket _socket = io('http://localhost:3000', <String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': false,
   });

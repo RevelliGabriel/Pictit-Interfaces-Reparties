@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
@@ -23,6 +24,16 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    gameManager.hintStream.listen((event) {
+      Fluttertoast.showToast(
+          msg: "This is Center Short Toast",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    });
     return StreamBuilder<GameStepEnum>(
         stream: gameManager.gameStepStream,
         initialData: GameStepEnum.IDENTIFYING,

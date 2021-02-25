@@ -17,15 +17,17 @@ const createServer = (http) => {
         },
         identify(socket, req) {
             //console.log("Identifing : ", socket.id);
-            if (req.name == 'board' ){
+            if (req.name == 'board') {
                 const board = createBoard(socket, "SuperGame1")
                 gameManager.addBoard(board)
-                //console.log("\n--new board identify : ", board.name);
+                console.log("\n--new board identify : ", board.name);
             }
             else if (!(req.name in clients)) {
                 const player = createPlayer(socket, req.name);
 
                 clients[req.name] = player;
+
+                // player.onPlayerNotify().then((res) => player.onPlayerNotify());
 
                 //console.log("\n--new player identify : ", player.name);
 
@@ -40,11 +42,11 @@ const createServer = (http) => {
 
                 socket.on('disconnect', () => {
                     //console.log(player.name ," has left the game")
-                    gameManager.playerDisconnect.apply(gameManager, [player]); 
+                    gameManager.playerDisconnect.apply(gameManager, [player]);
                 });
 
                 socket.on('join', (req) => {
-                    //console.log(player.name, " joined", req.name);
+                    console.log(player.name, " joined", req.name);
                     gameManager.joinGame.apply(gameManager, [player, req]);
                 });
             } else {

@@ -31,7 +31,7 @@ const createGame = (name) => {
                 player.setPosition(this.players.length - 1);
                 //player.setGame(this);
                 //this.board.notifyPlayersList(this.players);
-                if(this.board){
+                if (this.board) {
                     this.board.notifyGameChange(this);
                 }
                 //console.log("\t--new player join the game : ", player.name)
@@ -57,16 +57,38 @@ const createGame = (name) => {
             console.log("intrus pos : ", this.intrusPosPlayer);
             this.intrusName = this.getIntrusPlayer().name;
         },
+        associatePlayers() {
+            // for (let i = 0; i < this.oldPlayers.length; ++i) {
+            //     let tmp_players = [...this.players]
+            //     tmp_players = tmp_players.map(function(item) { 
+            //         delete item.players; 
+            //         return item; 
+            //     });
+            //     this.players[i].setPlayers(this.tmp_players);
+            //     // this.players[i].setGame(this);
+            // }
+            for (let i = 0; i < this.players.length; ++i) {
+                this.associatePlayer(this.players[i]);
+            }
+        },
+        associatePlayer(player) {
+            player.onPlayerNotify().then((message) => {
+                let index = this.players.findIndex((pl) => pl.name === message.playerName)
+                this.players[index].notifyPlayerHint(message)
+                this.associatePlayer(player);
+                // this.players[i].onPlayerNotify()
+            });
+        },
         notifyGameBoard() {
             this.board.notify(this.players);
         },
         delatePlayers(name) {
-            const pl = this.players.find(elem => elem.name == name); 
+            const pl = this.players.find(elem => elem.name == name);
             if (this.intrusPosPlayer > pl.position) {
                 this.intrusPosPlayer--;
             }
             this.playersOut.push(pl);
-            this.players = this.players.filter(elem => elem.name != name);     
+            this.players = this.players.filter(elem => elem.name != name);
         },
         hasPlayer(player) {
             // //console.log("hasPlayer check, player :", player)
@@ -128,8 +150,13 @@ const createGame = (name) => {
                 this.board.notifyGameChange(this);
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyPlayerOut(this.playerNameOut);
+                    this.players[i].notifyPlayersList(this.players);
                 }
                 this.delatePlayers(this.playerNameOut);
+            } else if (topic == 'notify-players-list') {
+                for (let i = 0; i < this.players.length; ++i) {
+                    this.players[i].notifyPlayersList(this.players)
+                }
             }
             return true;
         },
@@ -182,7 +209,7 @@ const createGame = (name) => {
                 await this.playOneTrun();
                 console.log("Voici le player OUT", this.playerNameOut);
                 //if (this.playerNameOut.isIntrus) {
-                if (this.playerNameOut == this.intrusName){
+                if (this.playerNameOut == this.intrusName) {
                     // this.players[this.intrusPosPlayer].askLastWord();
                     // fin du jeu
                     console.log("fin du jeu, l'intrus a été éliminé : ", this.playerNameOut);
@@ -201,7 +228,7 @@ const createGame = (name) => {
         async playOneTrun() {
             console.log('\n position du premier joeur a jouer le tour : ', this.currentPosPlayer)
             for (let player of this.players) {
-                //console.log("\ndebut du tour de", player.name)
+                console.log("\ndebut du tour de", player.name)
                 this.board.notifyGameChange(this);
                 let cardId = await player.askCard();
                 let card = player.hand.find(elem => elem.id == cardId)
@@ -263,7 +290,9 @@ const createGame = (name) => {
             //console.log('\nAll players are ready, the game is launched !!');
             //console.log('\t\t', this.name, " started..!");
             this.oldPlayers = [...this.players];
+            this.associatePlayers();
             this.generateIntrus();
+            this.notifyAllPlayers('notify-players-list')
             this.players[this.intrusPosPlayer].isIntrus = true;
             console.log("L'intrus est : ", this.players[this.intrusPosPlayer]);
             //console.log("\nDebut de la distribution");

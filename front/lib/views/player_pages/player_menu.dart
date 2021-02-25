@@ -29,6 +29,7 @@ class _PlayerMenuState extends State<PlayerMenu> {
         stream: connectionManager.connectionStateStream,
         initialData: ConnectionStateEnum.DISCONNECTED,
         builder: (context, snapshot) {
+          
           if (snapshot.data == ConnectionStateEnum.CONNECTED) {
             return PlayerWrapper();
           }

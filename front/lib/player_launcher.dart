@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:front/services/managers/connection_manager.dart';
+import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
 import 'package:front/services/managers/lobby_manager.dart';
+import 'package:front/services/models/player.dart';
 import 'package:front/services/themes/initial_theme.dart';
+import 'package:front/views/components/fancy_fab.dart';
 import 'package:front/views/player_pages/player_menu.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ConnectionManager connectionManager = Global().fetch(ConnectionManager);
   LobbyManager lobbyManager = Global().fetch(LobbyManager);
+  GameManager gameManager = Global().fetch(GameManager);
 
   @override
   void initState() {
@@ -48,6 +52,25 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PlayerMenu(),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     gameManager.sendHint(null);
+      //   },
+      //   child: Icon(Icons.navigation),
+      //   backgroundColor: Colors.green,
+      // ),
+      floatingActionButton: StreamBuilder<List<Player>>(
+          stream: gameManager.playersStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return FancyFab(
+                players: snapshot.data,
+                me: gameManager.me,
+                function: (String playerTo, String playerIntrus) { gameManager.sendHint(playerTo, playerIntrus); },
+              );
+            }
+            return Container();
+          }),
     );
   }
 }

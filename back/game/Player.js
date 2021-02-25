@@ -6,6 +6,7 @@ const createPlayer = (socket, name) => {
         hand: [],
         position: null,
         //game: null,
+        players: null,
         isIntrus: null,
 
         setPosition(pos) {
@@ -16,9 +17,12 @@ const createPlayer = (socket, name) => {
         //     if (this.game !== null)
         //         this.game.deletePlayer(this);
         // },
-        // setGame(game) {
-        //     this.game = game;
-        // },
+        setGame(game) {
+            this.game = game;
+        },
+        setPlayers(players) {
+            this.players = players;
+        },
         getPosition() {
             return this.position
         },
@@ -73,6 +77,9 @@ const createPlayer = (socket, name) => {
         notifyGameStopped() {
             socket.emit('game-ended');
         },
+        notifyPlayersList(players){
+            socket.emit('update-players', {players : players});
+        },
         askTrade(nextPlayer) {
             cards = nextPlayer.getHand();
             return new Promise((resolve, reject) => {
@@ -112,6 +119,18 @@ const createPlayer = (socket, name) => {
                 });
             })
         },
+        onPlayerNotify() {
+            return new Promise((resolve, reject) => {
+                socket.on('notify-game-hint', (message) => {
+                    // let p = this.players.find(p => p.name == message.playerName);
+                    // p.notifyPlayerHint(message);
+                    resolve(message);
+                });
+            });
+        },
+        notifyPlayerHint(message) {
+            socket.emit('notify-player-hint', { message: message });
+        }
     }
     return obj;
 }

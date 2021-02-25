@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/manager.dart';
 import 'package:front/services/models/game.dart';
 import 'package:front/services/models/player.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class GameManager implements Manager {
   Game game;
@@ -14,16 +16,26 @@ class GameManager implements Manager {
   List<Player> players;
   String word;
   Socket _socket;
+
+  bool spam = false;
+  String message;
+
   StreamController<GameStepEnum> _gameStepController =
       StreamController.broadcast();
   StreamController<GamePlayerStateEnum> _gamePlayerStateStepController =
       StreamController.broadcast();
   StreamController<bool> _gameUpdated = StreamController.broadcast();
+  StreamController<List<Player>> _playersController = StreamController.broadcast();
 
   Stream<bool> get gameUpdatedStream => _gameUpdated.stream;
   Stream<GameStepEnum> get gameStepStream => _gameStepController.stream;
   Stream<GamePlayerStateEnum> get gamePlayerStateStream =>
       _gamePlayerStateStepController.stream;
+  Stream<List<Player>> get playersStream =>
+      _playersController.stream;
+
+  StreamController<dynamic> _hintController = StreamController.broadcast();
+  Stream<dynamic> get hintStream => _hintController.stream;
 
   void _addStep(GameStepEnum gameStep) {
     _gameStepController.sink.add(gameStep);
@@ -80,6 +92,12 @@ class GameManager implements Manager {
       _addStep(GameStepEnum.TURNVOTE);
     });
 
+    _socket.on('update-players', (json) {
+      // json['players'] assign to var
+      print("Time to vote");
+      this.updatePlayers(json);
+    });
+
     _socket.on('hand', (dynamic json) {
       me.addFromJsonCards(json['cards']);
       print("Ma nouvelle main");
@@ -95,6 +113,27 @@ class GameManager implements Manager {
       print("un joueur a été éliminé");
       _addStep(GameStepEnum.TURNPLAY);
       me.state = GamePlayerStateEnum.WAITING;
+    });
+
+    _socket.on('notify-player-hint', (message) {
+      message = message['message'];
+      print("Message d'un autre joueur");
+      print(message);
+      if (this.message != message.toString()) {
+        this.message = message.toString();
+        // _hintController.sink.add(message);
+        Fluttertoast.showToast(
+            msg: message['playerFrom'] +
+                " pense que " +
+                message['playerIntrus'] +
+                " est l'intrus !!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            fontSize: 16.0,
+            timeInSecForIosWeb: 3,
+            webPosition: 'center',
+            webBgColor: '#F79256');
+      }
     });
 
     _socket.on('update-game', (dynamic json) {
@@ -174,12 +213,31 @@ class GameManager implements Manager {
     }
   }
 
+  Future<bool> sendHint(String playerTo, String playerIntrus) async {
+    try {
+      dynamic message = {
+        "playerName": playerTo,
+        "playerIntrus": playerIntrus,
+        "playerFrom": me.name
+      };
+      _socket.emit(
+        "notify-game-hint",
+        message,
+      );
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   void updatePlayers(dynamic json) {
     print("Trying to update players");
     this.players = [];
     for (dynamic jsonPlayer in json['players']) {
       this.players.add(Player.fromJson(jsonPlayer));
     }
+    _playersController.sink.add(this.players);
     print("Players updated");
   }
 
@@ -188,6 +246,8 @@ class GameManager implements Manager {
     _gameUpdated.close();
     _gameStepController.close();
     _gamePlayerStateStepController.close();
+    _hintController.close();
+    _playersController.close();
     // TODO: implement dispose
   }
 }

@@ -36,8 +36,8 @@ const createGameManager = () => {
         },
         playerDisconnect(player) {
             //player.disconnect();
-            const game = this.getGameWithName("SuperGame1");
-            game.deletePlayer(player);
+            // const game = this.getGameWithName("SuperGame1");
+            // game.deletePlayer(player);
         },
     }
     return obj;

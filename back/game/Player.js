@@ -6,6 +6,7 @@ const createPlayer = (socket, name) => {
         hand: [],
         position: null,
         //game: null,
+        board: null,
         players: null,
         isIntrus: null,
 
@@ -19,6 +20,9 @@ const createPlayer = (socket, name) => {
         // },
         setGame(game) {
             this.game = game;
+        },
+        setBoard(board) {
+            this.board = board;
         },
         setPlayers(players) {
             this.players = players;
@@ -96,6 +100,7 @@ const createPlayer = (socket, name) => {
                 socket.emit('ask-word')
                 socket.on('choose-word', (word) => {
                     //console.log("Player ", this.name, " choose the word : ", word)
+                    this.board.notifyPlayerPlayed(this.name);
                     resolve(word);
                 });
             })

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/services/enums/game_step_enums.dart';
 import 'package:front/services/managers/connection_manager.dart';
 import 'package:front/services/managers/game_manager.dart';
 import 'package:front/services/managers/global.dart';
@@ -63,11 +64,22 @@ class _MyHomePageState extends State<MyHomePage> {
           stream: gameManager.playersStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return FancyFab(
-                players: snapshot.data,
-                me: gameManager.me,
-                function: (String playerTo, String playerIntrus) { gameManager.sendHint(playerTo, playerIntrus); },
-              );
+              return StreamBuilder<GameStepEnum>(
+                  stream: gameManager.gameStepStream,
+                  initialData: GameStepEnum.IDENTIFYING,
+                  builder: (context, snapshot) {
+                    if (snapshot.data == GameStepEnum.TURNPLAY ||
+                        snapshot.data == GameStepEnum.TURNVOTE) {
+                      return FancyFab(
+                        players: gameManager.players,
+                        me: gameManager.me,
+                        function: (String playerTo, String playerIntrus) {
+                          gameManager.sendHint(playerTo, playerIntrus);
+                        },
+                      );
+                    }
+                    return Container();
+                  });
             }
             return Container();
           }),

@@ -1,10 +1,12 @@
 import 'package:front/services/enums/game_player_state_enum.dart';
 import 'package:front/services/enums/game_step_enums.dart';
+import 'package:front/services/models/card.dart';
 import 'package:front/services/models/player.dart';
 
 class Game {
   List<Player> players;
   List<Player> allPlayers;
+  List<GameCard> playedCards;
   GameStepEnum status;
   String intruName;
   bool isIntruWinner;
@@ -24,11 +26,15 @@ class Game {
   void updateGameFromJson(dynamic json) {
     this.players = [];
     this.allPlayers = [];
+    this.playedCards = [];
     for (dynamic jsonPlayer in json['oldPlayers']) {
       this.allPlayers.add(Player.fromJson(jsonPlayer));
     }
     for (dynamic jsonPlayer in json['players']) {
       this.players.add(Player.fromJson(jsonPlayer));
+    }
+    for (dynamic jsonCard in json['playersCards']) {
+      this.playedCards.add(GameCard.fromJson(jsonCard));
     }
     this.status = GameStepEnum.values.elementAt(json['state']);
     if (json['intrusPosPlayer'] as int < this.players.length) {

@@ -95,21 +95,25 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20)),
-                  color: (player.state == GamePlayerStateEnum.PLAYING)
-                      ? Theme.of(context).primaryColorDark
-                      : Theme.of(context).accentColor,
+                  color: isDead
+                      ? Colors.grey[700]
+                      : (player.state == GamePlayerStateEnum.PLAYING)
+                          ? Theme.of(context).primaryColorDark
+                          : Theme.of(context).accentColor,
                 ),
                 child: Container(),
               )),
           Positioned(
             top: 30,
             left: 50,
-            child: ShowHand(
-                isScrollable: false,
-                cards: player.gameCards,
-                faceDown: true,
-                disableSelection: true,
-                ratio: 2 * widthStack / 1000),
+            child: isDead
+                ? Container()
+                : ShowHand(
+                    isScrollable: false,
+                    cards: player.gameCards,
+                    faceDown: true,
+                    disableSelection: true,
+                    ratio: 2 * widthStack / 1000),
           ),
           Positioned(
             top: heightStack * 0.9,
@@ -119,7 +123,8 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).primaryColor,
+                color:
+                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
               ),
               child: Text(
                 player.name,
@@ -167,21 +172,25 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20)),
-                  color: (player.state == GamePlayerStateEnum.PLAYING)
-                      ? Theme.of(context).primaryColorDark
-                      : Theme.of(context).accentColor,
+                  color: isDead
+                      ? Colors.grey[700]
+                      : (player.state == GamePlayerStateEnum.PLAYING)
+                          ? Theme.of(context).primaryColorDark
+                          : Theme.of(context).accentColor,
                 ),
                 child: Container(),
               )),
           Positioned(
             top: 30,
             right: 50,
-            child: ShowHand(
-                isScrollable: false,
-                cards: player.gameCards,
-                faceDown: true,
-                disableSelection: true,
-                ratio: 2 * widthStack / 1000),
+            child: isDead
+                ? Container()
+                : ShowHand(
+                    isScrollable: false,
+                    cards: player.gameCards,
+                    faceDown: true,
+                    disableSelection: true,
+                    ratio: 2 * widthStack / 1000),
           ),
           Positioned(
             top: heightStack * 0.9,
@@ -191,7 +200,8 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).primaryColor,
+                color:
+                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
               ),
               child: Text(
                 player.name,
@@ -239,21 +249,25 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20)),
-                  color: (player.state == GamePlayerStateEnum.PLAYING)
-                      ? Theme.of(context).primaryColorDark
-                      : Theme.of(context).accentColor,
+                  color: isDead
+                      ? Colors.grey[700]
+                      : (player.state == GamePlayerStateEnum.PLAYING)
+                          ? Theme.of(context).primaryColorDark
+                          : Theme.of(context).accentColor,
                 ),
                 child: Container(),
               )),
           Positioned(
             bottom: 30,
             right: 50,
-            child: ShowHand(
-                isScrollable: false,
-                cards: player.gameCards,
-                faceDown: true,
-                disableSelection: true,
-                ratio: 2 * widthStack / 1000),
+            child: isDead
+                ? Container()
+                : ShowHand(
+                    isScrollable: false,
+                    cards: player.gameCards,
+                    faceDown: true,
+                    disableSelection: true,
+                    ratio: 2 * widthStack / 1000),
           ),
           Positioned(
             bottom: heightStack * 0.9,
@@ -263,7 +277,8 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).primaryColor,
+                color:
+                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
               ),
               child: Text(
                 player.name,
@@ -311,21 +326,25 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20)),
-                  color: (player.state == GamePlayerStateEnum.PLAYING)
-                      ? Theme.of(context).primaryColorDark
-                      : Theme.of(context).accentColor,
+                  color: isDead
+                      ? Colors.grey[700]
+                      : (player.state == GamePlayerStateEnum.PLAYING)
+                          ? Theme.of(context).primaryColorDark
+                          : Theme.of(context).accentColor,
                 ),
                 child: Container(),
               )),
           Positioned(
             bottom: 30,
             left: 50,
-            child: ShowHand(
-                isScrollable: false,
-                cards: player.gameCards,
-                faceDown: true,
-                disableSelection: true,
-                ratio: 2 * widthStack / 1000),
+            child: isDead
+                ? Container()
+                : ShowHand(
+                    isScrollable: false,
+                    cards: player.gameCards,
+                    faceDown: true,
+                    disableSelection: true,
+                    ratio: 2 * widthStack / 1000),
           ),
           Positioned(
             bottom: heightStack * 0.9,
@@ -335,7 +354,8 @@ class _BoardDistributionState extends State<BoardDistribution> {
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).primaryColor,
+                color:
+                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
               ),
               child: Text(
                 player.name,

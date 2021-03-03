@@ -109,17 +109,34 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(gameManager.me.isIntrus
-                        ? "Tu es l'intrus, ne te fais pas trouver !"
-                        : "le mot est : " + gameManager.word),
-                    ElevatedButton(
-                        onPressed: () {
-                          gameManager.wordOk();
-                          setState(() {
-                            wordOk = true;
-                          });
-                        },
-                        child: Text("Oui ! j'ai compris"))
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("La partie vas commencer, tiens-toi prêt !"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          "Tous les joueurs ont proposé un mot et un d'entre eux a été séléctionné. L'intrus a également été tiré au sort !"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(gameManager.me.isIntrus
+                          ? "Tu es l'intrus, tu ne sais donc pas quelle est le mot ! Fait attention, analyse les choix des adversaires, et essaye de ne pas te faire repérer !"
+                          : "Tu n'es pas l'intrus, et le mot est : " +
+                              gameManager.word +
+                              ""),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            gameManager.wordOk();
+                            setState(() {
+                              wordOk = true;
+                            });
+                          },
+                          child: Text("Oui ! j'ai compris")),
+                    )
                   ],
                 ),
               );

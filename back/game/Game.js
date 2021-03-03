@@ -69,6 +69,7 @@ const createGame = (name) => {
             // }
             for (let i = 0; i < this.players.length; ++i) {
                 this.associatePlayer(this.players[i]);
+                this.players[i].setBoard(this.board);
             }
         },
         associatePlayer(player) {
@@ -168,6 +169,7 @@ const createGame = (name) => {
                     cardToSteal: cardId,
                 }
                 this.trades.push(trade);
+                this.board.notifyGameChange(this);
             });
         },
         // askWord(player) {

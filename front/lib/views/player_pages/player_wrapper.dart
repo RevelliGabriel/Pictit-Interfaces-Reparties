@@ -71,15 +71,21 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
                     flex: 1,
                     child: Container(
                       height: 150,
-                      child: ShowHand(
-                          ratio: 1.5,
-                          cards: gameManager.other.gameCards,
-                          function: (GameCard card) {
-                            gameManager.tradeCard(card.id);
-                            setState(() {
-                              swapOk = true;
-                            });
-                          }),
+                      child: swapOk
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 30.0),
+                              child: Text(
+                                  "En attente de l'échange entres les autres joueurs"),
+                            )
+                          : ShowHand(
+                              ratio: 1.5,
+                              cards: gameManager.other.gameCards,
+                              function: (GameCard card) {
+                                gameManager.tradeCard(card.id);
+                                setState(() {
+                                  swapOk = true;
+                                });
+                              }),
                     )),
                 Flexible(
                   flex: 1,
@@ -104,32 +110,56 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             return PlayerWord();
           } else if (snapshot.data == GameStepEnum.TURNPLAY) {
             if (!wordOk) {
-              return Container(
-                width: MediaQuery.of(context).size.width * 0.7,
+              return Align(
                 alignment: Alignment.center,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Text("La partie vas commencer, tiens-toi prêt !"),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Text(
                           "Tous les joueurs ont proposé un mot et un d'entre eux a été séléctionné. L'intrus a également été tiré au sort !"),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(gameManager.me.isIntrus
-                          ? "Tu es l'intrus, tu ne sais donc pas quelle est le mot ! Fait attention, analyse les choix des adversaires, et essaye de ne pas te faire repérer !"
-                          : "Tu n'es pas l'intrus, et le mot est : " +
-                              gameManager.word +
-                              ""),
+                      padding: const EdgeInsets.all(20.0),
+                      child: gameManager.me.isIntrus
+                          ? RichText(
+                              text: TextSpan(
+                                text: "Tu es l'intrus",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text:
+                                          ", tu ne sais donc pas quelle est le mot ! Fait attention, analyse les choix des adversaires, et essaye de ne pas te faire repérer !",
+                                      style:
+                                          DefaultTextStyle.of(context).style),
+                                ],
+                              ),
+                            )
+                          : RichText(
+                              text: TextSpan(
+                                text: "Tu n'es pas l'intrus",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: ' et le mot est : ',
+                                      style:
+                                          DefaultTextStyle.of(context).style),
+                                  TextSpan(
+                                      text: gameManager.word,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: ElevatedButton(
                           onPressed: () {
                             gameManager.wordOk();

@@ -107,6 +107,7 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
               return Align(
                 alignment: Alignment.center,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(

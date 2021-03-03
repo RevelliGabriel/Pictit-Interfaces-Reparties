@@ -104,7 +104,8 @@ class _PlayerWrapperState extends State<PlayerWrapper> {
             return PlayerWord();
           } else if (snapshot.data == GameStepEnum.TURNPLAY) {
             if (!wordOk) {
-              return Align(
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.7,
                 alignment: Alignment.center,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

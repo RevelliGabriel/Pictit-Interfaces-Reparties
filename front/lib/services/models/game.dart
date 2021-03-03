@@ -7,6 +7,7 @@ class Game {
   List<Player> players;
   List<Player> allPlayers;
   List<GameCard> playedCards;
+  List<String> playersPlay;
   GameStepEnum status;
   String intruName;
   bool isIntruWinner;
@@ -27,6 +28,7 @@ class Game {
     this.players = [];
     this.allPlayers = [];
     this.playedCards = [];
+    this.playersPlay = [];
     for (dynamic jsonPlayer in json['oldPlayers']) {
       this.allPlayers.add(Player.fromJson(jsonPlayer));
     }
@@ -40,7 +42,35 @@ class Game {
     if (json['intrusPosPlayer'] as int < this.players.length) {
       this.players.elementAt(json['intrusPosPlayer'] as int).isIntrus = true;
     }
-    setPlayerPlaying(json['currentPosPlayer'] as int);
+    for (dynamic jsonPlayerName in json['playersPlay']) {
+      this.playersPlay.add(jsonPlayerName as String);
+      print("LES PLAYERS QUI ONT JOUé");
+      print(this.playersPlay);
+    }
+    if (this.status == GameStepEnum.TURNPLAY) {
+      setPlayerPlaying(json['currentPosPlayer'] as int);
+    } else {
+      print("BEFORE BIG MAP");
+      // this.players.map((player) {
+      //   if (this.playersPlay.length > 0 &&
+      //       this.playersPlay.contains(player.name)) {
+      //     player.state = GamePlayerStateEnum.WAITING;
+      //     print(player.name + " n'a pas joué");
+      //   } else {
+      //     player.state = GamePlayerStateEnum.PLAYING;
+      //     print(player.name + " a joué");
+      //   }
+      // });
+      for (Player player in this.players){
+        if (this.playersPlay.contains(player.name)) {
+          player.state = GamePlayerStateEnum.WAITING;
+          print(player.name + " a joué");
+        } else {
+          player.state = GamePlayerStateEnum.PLAYING;
+          print(player.name + " n'a pas joué");
+        }
+      }
+    }
     this.intruName = json['intrusName'];
     this.isIntruWinner =
         this.players.map((e) => e.name).contains(this.intruName);

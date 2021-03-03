@@ -5,6 +5,7 @@ import 'package:front/services/managers/global.dart';
 import 'package:front/services/models/game.dart';
 import 'package:front/services/models/player.dart';
 import 'package:front/views/components/show_hand.dart';
+import 'package:front/views/components/loading.dart';
 
 class BoardDistribution extends StatefulWidget {
   final Game game;
@@ -118,21 +119,37 @@ class _BoardDistributionState extends State<BoardDistribution> {
           Positioned(
             top: heightStack * 0.9,
             left: widthStack * 0.7,
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color:
-                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
-              ),
-              child: Text(
-                player.name,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: isDead
+                        ? Colors.grey[700]
+                        : Theme.of(context).primaryColor,
+                  ),
+                  child: Text(
+                    player.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+                isDead
+                    ? Container()
+                    : (player.state == GamePlayerStateEnum.PLAYING)
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Loading(
+                              size: 20,
+                            ),
+                          )
+                        : Container()
+              ],
             ),
           )
         ],
@@ -195,21 +212,37 @@ class _BoardDistributionState extends State<BoardDistribution> {
           Positioned(
             top: heightStack * 0.9,
             right: widthStack * 0.7,
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color:
-                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
-              ),
-              child: Text(
-                player.name,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                isDead
+                    ? Container()
+                    : (player.state == GamePlayerStateEnum.PLAYING)
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Loading(
+                              size: 20,
+                            ),
+                          )
+                        : Container(),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: isDead
+                        ? Colors.grey[700]
+                        : Theme.of(context).primaryColor,
+                  ),
+                  child: Text(
+                    player.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           )
         ],
@@ -272,21 +305,37 @@ class _BoardDistributionState extends State<BoardDistribution> {
           Positioned(
             bottom: heightStack * 0.9,
             right: widthStack * 0.7,
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color:
-                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
-              ),
-              child: Text(
-                player.name,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                isDead
+                    ? Container()
+                    : (player.state == GamePlayerStateEnum.PLAYING)
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Loading(
+                              size: 20,
+                            ),
+                          )
+                        : Container(),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: isDead
+                        ? Colors.grey[700]
+                        : Theme.of(context).primaryColor,
+                  ),
+                  child: Text(
+                    player.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           )
         ],
@@ -349,21 +398,37 @@ class _BoardDistributionState extends State<BoardDistribution> {
           Positioned(
             bottom: heightStack * 0.9,
             left: widthStack * 0.7,
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color:
-                    isDead ? Colors.grey[700] : Theme.of(context).primaryColor,
-              ),
-              child: Text(
-                player.name,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: isDead
+                        ? Colors.grey[700]
+                        : Theme.of(context).primaryColor,
+                  ),
+                  child: Text(
+                    player.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+                isDead
+                    ? Container()
+                    : (player.state == GamePlayerStateEnum.PLAYING)
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Loading(
+                              size: 20,
+                            ),
+                          )
+                        : Container()
+              ],
             ),
           )
         ],

@@ -117,7 +117,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
           ),
           Positioned(
             top: heightStack * 0.9,
-            left: widthStack * 0.8,
+            left: widthStack * 0.7,
             child: Container(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -194,7 +194,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
           ),
           Positioned(
             top: heightStack * 0.9,
-            right: widthStack * 0.8,
+            right: widthStack * 0.7,
             child: Container(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -271,7 +271,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
           ),
           Positioned(
             bottom: heightStack * 0.9,
-            right: widthStack * 0.8,
+            right: widthStack * 0.7,
             child: Container(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
@@ -348,7 +348,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
           ),
           Positioned(
             bottom: heightStack * 0.9,
-            left: widthStack * 0.8,
+            left: widthStack * 0.7,
             child: Container(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),

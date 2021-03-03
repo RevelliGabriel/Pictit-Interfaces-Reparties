@@ -14,4 +14,9 @@ class GameCard {
     path = 'assets/images/' + (jsonGameCard['path'] as String);
     id = jsonGameCard['id'] as int;
   }
+
+  GameCard.fromId(int cardId) {
+    path = 'assets/images/Card' + (cardId.toString()) + ".jpg";
+    id = cardId;
+  }
 }

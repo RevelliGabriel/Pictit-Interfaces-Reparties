@@ -16,6 +16,7 @@ class GameManager implements Manager {
   List<Player> players;
   String word;
   Socket _socket;
+  List<dynamic> trades;
 
   bool spam = false;
   String message;
@@ -123,6 +124,7 @@ class GameManager implements Manager {
     _socket.on('new-trades', (json) {
       print("VOICI LES TRADES : ");
       print(json['trades']);
+      this.trades = json['trades'];
     });
 
     _socket.on('notify-player-hint', (message) {

@@ -59,7 +59,7 @@ class _BoardWrapperState extends State<BoardWrapper> {
                     text: "Qui selon vous est l'intrus ?",
                   ),
                   Container(
-                    color: Theme.of(context).backgroundColor.withOpacity(0.5),
+                    color: Theme.of(context).backgroundColor.withOpacity(0.8),
                   ),
                   Align(
                     alignment: Alignment.center,

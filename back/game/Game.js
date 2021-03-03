@@ -17,6 +17,7 @@ const createGame = (name) => {
         playerNameOut: "",
         oldPlayers: [],
         playersOut: [],
+        playersPlay: [],
         currentPosPlayer: 0,
         intrusPosPlayer: 0,
         intrusName: "",
@@ -158,6 +159,10 @@ const createGame = (name) => {
                 for (let i = 0; i < this.players.length; ++i) {
                     this.players[i].notifyPlayersList(this.players)
                 }
+            } else if (topic == 'new-trades') {
+                for (let i = 0; i < this.players.length; ++i) {
+                    this.players[i].notifyPlayersTrades(this.trades)
+                }
             }
             return true;
         },
@@ -169,6 +174,7 @@ const createGame = (name) => {
                     cardToSteal: cardId,
                 }
                 this.trades.push(trade);
+                this.playersPlay.push(this.getCurrentPlayer().name);
                 this.board.notifyGameChange(this);
             });
         },
@@ -185,7 +191,9 @@ const createGame = (name) => {
                 if (this.currentPosPlayer === 0)
                     break;
             }
+            this.playersPlay = [];
             this.setNewCardsToPlayers();
+            this.notifyAllPlayers('new-trades')
             return this.notifyAllPlayers('new-hands');
         },
         async chooseWord() {
@@ -196,9 +204,14 @@ const createGame = (name) => {
             //     if (this.currentPosPlayer === 0)
             //         break;
             // }
-            return Promise.all(this.players.map(player => player.askWord())).then((values) => {
+            return Promise.all(this.players.map(player => player.askWord().then((value) => {
+                this.playersPlay.push(player.name);
+                this.board.notifyGameChange(this);
+                return value;
+            }))).then((values) => {
                 this.words = values;
                 //console.log("Players words : ", this.words)
+                this.playersPlay = [];
                 this.setNewWordToGame();
                 return this.notifyAllPlayers('new-word');
             });
@@ -240,8 +253,10 @@ const createGame = (name) => {
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
                 console.log("fin du tour de", player.name)
                 console.log('\n etat des cartes joueés : ', this.playersCards)
+                this.playersPlay.push(player.name);
             }
             console.log('\n position du current player avant vote : ', this.currentPosPlayer)
+            this.playersPlay = [];
             this.state = 5;
             this.board.notifyGameChange(this);
             return this.askVotes();

@@ -120,6 +120,11 @@ class GameManager implements Manager {
       me.state = GamePlayerStateEnum.WAITING;
     });
 
+    _socket.on('new-trades', (json) {
+      print("VOICI LES TRADES : ");
+      print(json['trades']);
+    });
+
     _socket.on('notify-player-hint', (message) {
       message = message['message'];
       print("Message d'un autre joueur");

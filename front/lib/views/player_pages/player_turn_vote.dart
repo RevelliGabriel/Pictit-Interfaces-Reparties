@@ -36,7 +36,7 @@ class _PlayerTurnVoteState extends State<PlayerTurnVote> {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: ShowVotePlayers(
                   players: gameManager.players
-                      .where((element) => element.name != gameManager.me.name),
+                      .where((element) => element.name != gameManager.me.name).toList(),
                   function: (String name) {
                     gameManager.chooseVote(name);
                     setState(() {

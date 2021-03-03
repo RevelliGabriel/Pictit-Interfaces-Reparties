@@ -85,6 +85,9 @@ const createPlayer = (socket, name) => {
         notifyPlayersList(players) {
             socket.emit('update-players', { players: players });
         },
+        notifyPlayersTrades(trades) {
+            socket.emit('new-trades', { trades: trades });
+        },
         askTrade(nextPlayer) {
             cards = nextPlayer.getHand();
             return new Promise((resolve, reject) => {

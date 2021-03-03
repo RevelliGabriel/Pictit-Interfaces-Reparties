@@ -88,7 +88,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
         children: [
           Positioned(
               top: 0,
-              left: 10,
+              left: widthStack * 0.05,
               width: widthStack * 0.7,
               height: heightStack * 0.5,
               child: Container(
@@ -106,7 +106,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
               )),
           Positioned(
             top: 30,
-            left: 50,
+            left: widthStack * 0.1,
             child: isDead
                 ? Container()
                 : ShowHand(
@@ -181,7 +181,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
         children: [
           Positioned(
               top: 0,
-              right: 10,
+              right: widthStack * 0.05,
               width: widthStack * 0.7,
               height: heightStack * 0.5,
               child: Container(
@@ -199,7 +199,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
               )),
           Positioned(
             top: 30,
-            right: 50,
+            right: widthStack * 0.1,
             child: isDead
                 ? Container()
                 : ShowHand(
@@ -274,7 +274,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
         children: [
           Positioned(
               bottom: 0,
-              right: 10,
+              right: widthStack * 0.05,
               width: widthStack * 0.7,
               height: heightStack * 0.5,
               child: Container(
@@ -292,7 +292,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
               )),
           Positioned(
             bottom: 30,
-            right: 50,
+            right: widthStack * 0.1,
             child: isDead
                 ? Container()
                 : ShowHand(
@@ -367,7 +367,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
         children: [
           Positioned(
               bottom: 0,
-              left: 10,
+              left: widthStack * 0.05,
               width: widthStack * 0.7,
               height: heightStack * 0.5,
               child: Container(
@@ -385,7 +385,7 @@ class _BoardDistributionState extends State<BoardDistribution> {
               )),
           Positioned(
             bottom: 30,
-            left: 50,
+            left: widthStack * 0.1,
             child: isDead
                 ? Container()
                 : ShowHand(

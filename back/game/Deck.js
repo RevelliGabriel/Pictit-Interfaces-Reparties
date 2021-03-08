@@ -8,6 +8,7 @@ module.exports = class Deck {
         }
     }
 
+    // mélange des cartes
     shuffle() {
         for (let i = this.deck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -15,6 +16,7 @@ module.exports = class Deck {
         }
     }
 
+    // répartition du paquet en 4 jeux égaux
     cutIn4() {
         this.shuffle();
         let posCards = 0;

@@ -3,42 +3,35 @@ const Deck = require('./Deck');
 
 const createGame = (name) => {
     const obj = {
-        name: name,
-        // players: {},
-        deck: new Deck(),
-        // board: new Board(),
-        board: null,
-        state: 0,
-        trades: [],
-        words: [],
-        word: "",
-        players: [],
-        playersCards: [],
-        playerNameOut: "",
-        oldPlayers: [],
-        playersOut: [],
-        playersPlay: [],
-        currentPosPlayer: 0,
-        intrusPosPlayer: 0,
-        intrusName: "",
+        name: name, // nom de la partie
+        deck: new Deck(), // ensemble des cartes
+        board: null, // l'objet board
+        state: 0, // etat courant de la phase du jeu
+        trades: [], // ensemble des echanges de cartes
+        words: [], // ensemble des mots proposés
+        word: "", // le mot choisi
+        players: [], // les joueurs en jeu
+        playersCards: [], // les crates deposé à chaque tours
+        playerNameOut: "", // nom du dernier joueur elimine
+        oldPlayers: [], // liste de joueurs de base, avant que le jeu commence
+        playersOut: [], // liste de joueurs éliminé
+        playersPlay: [], // liste des joeurs ayant joué à chaque tour
+        currentPosPlayer: 0, // position du joeur courant
+        intrusPosPlayer: 0, // position de l'intru 
+        intrusName: "", // nom de l'intrus
 
         addBoard(board) {
             this.board = board
-            //this.board.setGame(this)
         },
         addPlayer(player) {
             if (!this.hasPlayer(player)) {
                 this.players.push(player);
                 player.setPosition(this.players.length - 1);
-                //player.setGame(this);
-                //this.board.notifyPlayersList(this.players);
                 if (this.board) {
                     this.board.notifyGameChange(this);
                 }
-                //console.log("\t--new player join the game : ", player.name)
                 return true;
             }
-            // //console.log("\t...player trying to join game but already in game : ", player.name)
             return false;
         },
         getCurrentPlayer() {
@@ -48,7 +41,6 @@ const createGame = (name) => {
             return this.players[this.incrementPos(this.currentPosPlayer)];
         },
         getIntrusPlayer() {
-            // //console.log("get intrus player : ", this.players[this.intrusPosPlayer].name)
             return this.players[this.intrusPosPlayer];
         },
         generateIntrus() {
@@ -58,27 +50,20 @@ const createGame = (name) => {
             console.log("intrus pos : ", this.intrusPosPlayer);
             this.intrusName = this.getIntrusPlayer().name;
         },
+        // associe la board au joueur
         associatePlayers() {
-            // for (let i = 0; i < this.oldPlayers.length; ++i) {
-            //     let tmp_players = [...this.players]
-            //     tmp_players = tmp_players.map(function(item) { 
-            //         delete item.players; 
-            //         return item; 
-            //     });
-            //     this.players[i].setPlayers(this.tmp_players);
-            //     // this.players[i].setGame(this);
-            // }
             for (let i = 0; i < this.players.length; ++i) {
                 this.associatePlayer(this.players[i]);
                 this.players[i].setBoard(this.board);
             }
         },
+        // fonction recusursive d'ecoute d'un canal socketIO
+        // utilisé pour la communication type alliance
         associatePlayer(player) {
             player.onPlayerNotify().then((message) => {
                 let index = this.players.findIndex((pl) => pl.name === message.playerName)
                 this.players[index].notifyPlayerHint(message)
                 this.associatePlayer(player);
-                // this.players[i].onPlayerNotify()
             });
         },
         notifyGameBoard() {
@@ -93,9 +78,6 @@ const createGame = (name) => {
             this.players = this.players.filter(elem => elem.name != name);
         },
         hasPlayer(player) {
-            // //console.log("hasPlayer check, player :", player)
-            // //console.log("hasPlayer check, players :", this.players)
-            // //console.log("hasPlayer check, waiting players :", this.waitingPlayers)
             var found = false;
             for (var i = 0; i < this.players.length; i++) {
                 if (this.players[i].name == player.name) {
@@ -103,7 +85,6 @@ const createGame = (name) => {
                     break;
                 }
             }
-            // return Object.values(this.players).find(ply => player === ply) !== -1;
             return found;
         },
         incrementPos(pos) {
@@ -113,6 +94,7 @@ const createGame = (name) => {
                 pos++;
             return pos
         },
+        // retourne le nom du joueur quia  recu le plus de vote
         getPlayerNameMaxVote(votes) {
             var max = 0;
             var playerName = "";
@@ -126,6 +108,7 @@ const createGame = (name) => {
             }
             return playerName;
         },
+        // permet de notifier tous les joeurs sur un topic donné
         notifyAllPlayers(topic) {
             if (topic == 'game-started') {
                 this.board.notifyGameChange(this);
@@ -134,7 +117,6 @@ const createGame = (name) => {
                 }
             } else if (topic == 'game-ended') {
                 this.board.notifyGameChange(this);
-                //console.log(this.oldPlayers);
                 for (let i = 0; i < this.oldPlayers.length; ++i) {
                     this.oldPlayers[i].notifyGameStopped();
                 }
@@ -145,9 +127,6 @@ const createGame = (name) => {
             } else if (topic == 'new-word') {
                 this.board.notifyGameChange(this);
                 return Promise.all(this.players.map(player => player.notifyWord(this.word)));
-                // for (let i = 0; i < this.players.length; ++i) {
-                //     this.players[i].notifyWord(this.word);
-                // }
             } else if (topic == 'player-out') {
                 this.board.notifyGameChange(this);
                 for (let i = 0; i < this.players.length; ++i) {
@@ -166,6 +145,8 @@ const createGame = (name) => {
             }
             return true;
         },
+        // demande a chaque joueur de choisir une carte
+        // dans la main d'un adversaire et stocke le resultat
         askTrades() {
             return this.getCurrentPlayer().askTrade(this.getNextPlayer()).then(cardId => {
                 var trade = {
@@ -178,13 +159,8 @@ const createGame = (name) => {
                 this.board.notifyGameChange(this);
             });
         },
-        // askWord(player) {
-        //     return player.askWord().then(word => {
-        //         this.words.push(word);
-        //     });
-        // },
+        // fonction de lancement des echnages de cartes
         async tradeCardsOneByOne() {
-            // await this.forwardBeginTrade();
             while (true) {
                 await this.askTrades();
                 this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
@@ -196,41 +172,32 @@ const createGame = (name) => {
             this.notifyAllPlayers('new-trades')
             return this.notifyAllPlayers('new-hands');
         },
+        // fonction de choix d'un mot pour tous les joueurs
         async chooseWord() {
-            // await this.forwardBeginCall();
-            // while(true) {
-            //     await this.askWord();
-            //     this.currentPosPlayer = this.incrementPos(this.currentPosPlayer);
-            //     if (this.currentPosPlayer === 0)
-            //         break;
-            // }
             return Promise.all(this.players.map(player => player.askWord().then((value) => {
                 this.playersPlay.push(player.name);
                 this.board.notifyGameChange(this);
                 return value;
             }))).then((values) => {
                 this.words = values;
-                //console.log("Players words : ", this.words)
                 this.playersPlay = [];
                 this.setNewWordToGame();
                 return this.notifyAllPlayers('new-word');
             });
         },
+        // Fonction de jeu principale, qui lance un tour de jeu tant que cela est possible
         async playUntilSomeoneWin() {
             while (true) {
-                // playturn
                 this.state = 4;
                 this.board.notifyGameChange(this);
                 await this.playOneTrun();
                 console.log("Voici le player OUT", this.playerNameOut);
-                //if (this.playerNameOut.isIntrus) {
                 if (this.playerNameOut == this.intrusName) {
-                    // this.players[this.intrusPosPlayer].askLastWord();
                     // fin du jeu
                     console.log("fin du jeu, l'intrus a été éliminé : ", this.playerNameOut);
                     break;
                 } else if (this.players.length == 2) {
-                    // un joueur a gagné
+                    // l'intrus a gagné
                     // fin du jeu
                     console.log("fin du jeu, l'intrus a gagné");
                     break;
@@ -240,8 +207,9 @@ const createGame = (name) => {
             console.log("fin partie");
             return true;
         },
+        // joue un tour, demande une carte a chaque joueur
         async playOneTrun() {
-            console.log('\n position du premier joeur a jouer le tour : ', this.currentPosPlayer)
+            console.log('\n position du premier joueur a jouer le tour : ', this.currentPosPlayer)
             for (let player of this.players) {
                 console.log("\ndebut du tour de", player.name)
                 this.board.notifyGameChange(this);
@@ -261,40 +229,34 @@ const createGame = (name) => {
             this.board.notifyGameChange(this);
             return this.askVotes();
         },
+        // demande les votes à chaque joueurs
         askVotes() {
             return Promise.all(this.players.map(player => player.askVote(this.players))).then((votes) => {
                 console.log("Players votes : ", votes);
-                // compute votes and determine player
-                // this.setNewWordToGame();
-                // this.getIndexPlayerMaxVote();
                 this.playerNameOut = this.getPlayerNameMaxVote(votes);
                 return this.notifyAllPlayers('player-out');
             });
         },
+        // associe les nouvelles cartes aux joueurs apres les echanges
         setNewCardsToPlayers() {
             for (let trade of this.trades) {
                 _player = trade.player;
                 _otherPlayer = trade.playerToSteal;
                 cardId = trade.cardToSteal
-                //console.log('Old cards for players : ')
-                //console.log(_player.name, " : ", _player.hand)
-                //console.log(_otherPlayer.name, " : ", _otherPlayer.hand)
                 _player.hand.push(new Card(trade.cardToSteal))
                 _otherPlayer.hand = _otherPlayer.hand.filter(card => { return card.id != cardId })
-                //console.log('New cards for players : ')
-                //console.log(_player.name, " : ", _player.hand)
-                //console.log(_otherPlayer.name, " : ", _otherPlayer.hand)
             }
         },
+        // selection aleatoire du mot
         setNewWordToGame() {
             min = Math.ceil(0);
             max = Math.floor(this.words.length - 1);
             this.word = this.words[Math.floor(Math.random() * (max - min)) + min];
         },
+        // distribution des cartes a chaque joueurs
         distribute() {
             const hands = this.deck.cutIn4();
             const promises = [];
-            //console.log('Melange ok, envoie des cartes aux joueurs')
             for (let i = 0; i < this.players.length; ++i) {
                 promises.push(this.players[i].setHand(hands[i]));
             }
@@ -303,43 +265,42 @@ const createGame = (name) => {
         canStart() {
             return this.players.length === 4 && this.board != null;
         },
+        // equivalent du main de la partie
+        // permet de gerer la logique d'enchainement des phases du jeu
+        // met à jour le state à chaque phase
         launch() {
-            //console.log('\nAll players are ready, the game is launched !!');
-            //console.log('\t\t', this.name, " started..!");
             this.oldPlayers = [...this.players];
             this.associatePlayers();
             this.generateIntrus();
             this.notifyAllPlayers('notify-players-list')
             this.players[this.intrusPosPlayer].isIntrus = true;
             console.log("L'intrus est : ", this.players[this.intrusPosPlayer]);
-            //console.log("\nDebut de la distribution");
+            console.log("\nDebut de la distribution");
             return this.distribute().then(resp => {
                 this.state = 1;
                 this.notifyAllPlayers('game-started');
-                //console.log("Fin de la distribution");
-                //console.log("\nDebut des trades");
+                console.log("Fin de la distribution");
+                console.log("\nDebut des trades");
                 this.state = 2;
                 this.board.notifyGameChange(this);
                 return this.tradeCardsOneByOne();
             }).then(resp => {
-                //console.log("Fin des trades");
-                //console.log("\nDebut des choix de mots");
+                console.log("Fin des trades");
+                console.log("\nDebut des choix de mots");
                 this.state = 3;
                 this.board.notifyGameChange(this);
                 return this.chooseWord();
             }).then(resp => {
-                //console.log("Fin des mots");
-                //console.log("\nDebut du jeu");
+                console.log("Fin des mots");
+                console.log("\nDebut du jeu");
                 this.state = 4;
                 return this.playUntilSomeoneWin();
             }).then(resp => {
                 this.state = 6;
                 this.notifyAllPlayers('game-ended');
                 this.board.notifyGameChange(this);
-                //console.log("FIN DU JEU");
+                console.log("FIN DU JEU");
             })
-            //distribuer les cartes
-            //chaque joueur peut choisir une carte au voisin de droite (en voyant on jeu)
         }
     }
     return obj;

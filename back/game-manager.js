@@ -9,7 +9,7 @@ const createGameManager = () => {
                 game = availableGames[name];
             } else {
                 game = createGame(name);
-                //console.log("\nNew game created : ", name)
+                console.log("\nNew game created : ", name)
                 availableGames[name] = game;
             }
             return game;
@@ -20,7 +20,6 @@ const createGameManager = () => {
         joinGame(player, req) {
             const game = this.getGameWithName(req.name);
             if (game.addPlayer(player)) {
-                // game.notifyGameBoard();
                 if (game.canStart()) {
                     this.deleteGameWithName(game.name);
                     game.launch();
@@ -35,9 +34,7 @@ const createGameManager = () => {
             delete availableGames[name];
         },
         playerDisconnect(player) {
-            //player.disconnect();
-            // const game = this.getGameWithName("SuperGame1");
-            // game.deletePlayer(player);
+
         },
     }
     return obj;

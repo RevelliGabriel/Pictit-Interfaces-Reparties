@@ -1,5 +1,4 @@
 const createPlayer = require('./game/Player');
-// const createGame = require('./contree/Game');
 const createGameManager = require('./game-manager');
 const ioServer = require('socket.io');
 const createBoard = require('./game/Board');
@@ -13,10 +12,10 @@ const createServer = (http) => {
         gameManager: gameManager,
         launchServer(port) {
             http.listen(port)
-            //console.log('Listening on port %d', port);
+            console.log('Listening on port %d', port);
         },
         identify(socket, req) {
-            //console.log("Identifing : ", socket.id);
+            console.log("Identifing : ", socket.id);
             if (req.name == 'board') {
                 const board = createBoard(socket, "SuperGame1")
                 gameManager.addBoard(board)
@@ -27,21 +26,10 @@ const createServer = (http) => {
 
                 clients[req.name] = player;
 
-                // player.onPlayerNotify().then((res) => player.onPlayerNotify());
-
-                //console.log("\n--new player identify : ", player.name);
-
-                // socket.on('message', function name(data) {
-                //     //console.log(data);
-                //     io.emit('message', data)
-                // })
-
-                // socket.on('choose pos', (req, cb) => {
-                //     gameManager.choosePos.apply(gameManager, [player, req, cb]);  
-                // });
+                console.log("\n--new player identify : ", player.name);
 
                 socket.on('disconnect', () => {
-                    //console.log(player.name ," has left the game")
+                    console.log(player.name ," has left the game")
                     gameManager.playerDisconnect.apply(gameManager, [player]);
                 });
 
@@ -50,7 +38,7 @@ const createServer = (http) => {
                     gameManager.joinGame.apply(gameManager, [player, req]);
                 });
             } else {
-                //console.log("Name already taken")
+                console.log("Name already taken")
             }
         },
         getPlayerByName(name) {
@@ -59,7 +47,7 @@ const createServer = (http) => {
 
     }
     const manageSocket = (socket) => {
-        //console.log("client connected : ", socket.id)
+        console.log("client connected : ", socket.id)
         socket.on('identify', (req) => obj.identify.apply(gameManager, [socket, req]));
     };
     io.on('connection', manageSocket);
